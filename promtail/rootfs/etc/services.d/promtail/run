@@ -1,0 +1,25 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Home Assistant Add-on: Promtail
+# Runs Promtail
+# ==============================================================================
+
+bashio::log.info 'Starting Promtail...'
+promtail_config='/etc/promtail/config.yaml'
+
+case "$(bashio::config 'log_level')" in \
+  error)	log_level='error' ;; \
+  warning)	log_level='warn' ;; \
+  debug)	log_level='debug' ;; \
+  *)		log_level='info' ;; \
+esac;
+bashio::log.info "Loki log level set to ${log_level}"
+
+export "URL=$(bashio::config 'client.url')"
+export "LOG_LEVEL=$(bashio::config 'log_level')"
+
+bashio::log.info "Handing over control to Promtail..."
+promtail \
+  -config.expand-env=true \
+  -config.file=${promtail_config}
