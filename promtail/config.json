@@ -1,6 +1,6 @@
 {
   "name": "Promtail",
-  "url": "https://github.com/mdegat01/addons-promtail",
+  "url": "https://github.com/mdegat01/addon-promtail",
   "version": "0.9",
   "slug": "promtail",
   "ingress": false,
