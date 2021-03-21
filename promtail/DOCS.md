@@ -105,7 +105,8 @@ change the system journal is scraped by using this in conjunction with
 `skip_default_scrape_config`. **Note**: If `skip_default_scrape_config` is `true`
 then this field becomes required (otherwise there would be no scrape configs)
 
-The file must contain only a YAML list of scrape configs. Here's an example of the contents of this file:
+The file must contain only a YAML list of scrape configs. Here's an example of
+the contents of this file:
 
 ```yaml
 - job_name: zigbee2mqtt_messages
@@ -114,8 +115,8 @@ The file must contain only a YAML list of scrape configs. Here's an example of t
     - targets:
         - localhost
       labels:
-        job: zigbee2mqtt_messages # A `job` label is fairly standard in prometheus and useful for linking metrics and logs.
-        __path__: /share/zigbee2mqtt/log/**.txt # The path matching uses a third party library: https://github.com/bmatcuk/doublestar
+        job: zigbee2mqtt_messages
+        __path__: /share/zigbee2mqtt/log/**.txt
 ```
 
 This particular example would cause Promtail to scrape up the log of published
