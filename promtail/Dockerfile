@@ -1,9 +1,8 @@
 ARG BUILD_FROM
-ARG BUILD_ARCH=amd64
 
 # https://hub.docker.com/r/grafana/promtail
 # https://github.com/grafana/loki/releases
-FROM --platform=${BUILD_ARCH} grafana/promtail:2.2.0 as build
+FROM grafana/promtail:2.2.0 as build
 
 # hadolint ignore=DL3006
 FROM $BUILD_FROM
@@ -27,8 +26,6 @@ RUN set -eux; \
 
 # Add promtail
 COPY --from=build /usr/bin/promtail /usr/bin/promtail
-RUN set -eux; \
-    promtail -version;
 
 # yq is used to merge YAML files
 # https://github.com/mikefarah/yq/releases
@@ -50,8 +47,7 @@ RUN set -eux; \
     tar -xf /tmp/yq.tar.gz -C /usr/bin; \
     mv /usr/bin/yq_linux_${BINARCH} /usr/bin/yq; \
     chmod a+x /usr/bin/yq; \
-    rm -rf /tmp/*; \
-    yq -V;
+    rm -rf /tmp/*;
 
 COPY rootfs /
 RUN set -eux; \
