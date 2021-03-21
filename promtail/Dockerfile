@@ -1,8 +1,9 @@
 ARG BUILD_FROM
+ARG BUILD_ARCH=amd64
 
 # https://hub.docker.com/r/grafana/promtail
 # https://github.com/grafana/loki/releases
-FROM grafana/promtail:2.2.0 as build
+FROM --platform=${BUILD_ARCH} grafana/promtail:2.2.0 as build
 
 # hadolint ignore=DL3006
 FROM $BUILD_FROM

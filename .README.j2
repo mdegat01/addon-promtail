@@ -14,6 +14,30 @@
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
 
+{% set repository = namespace(url='https%3A//github.com/mdegat01/hassio-addons', slug='39bd2704') %}
+{% if channel == "edge" %}
+{% set repository.url = repository.url + '-edge' %}
+{% set repository.slug = '7eb274d5' %}
+## WARNING! THIS IS AN EDGE REPOSITORY
+
+This Add-ons repository contains edge builds of add-ons. Edge
+builds add-ons are based upon the latest development version.
+
+- They may not work at all.
+- They might stop working at any time.
+- They could have a negative impact on your system.
+
+This repository was created for:
+
+- Anybody willing to test.
+- Anybody interested in trying out upcoming add-ons or add-on features.
+- Developers.
+
+If you are more interested in stable releases of these add-ons:
+
+<https://github.com/mdegat01/hassio-addons>
+
+{% endif %}
 [![Open your Home Assistant instance and show the add add-on repository dialog
 with a specific repository URL pre-filled.][add-repo-shield]][add-repo]
 [![Open your Home Assistant instance and show the dashboard of a Supervisor add-on.][add-addon-shield]][add-addon]
@@ -84,9 +108,9 @@ SOFTWARE.
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [add-addon-shield]: https://my.home-assistant.io/badges/supervisor_addon.svg
-[add-addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon=39bd2704_promtail
+[add-addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon={{ repository.slug }}_promtail
 [add-repo-shield]: https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg
-[add-repo]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fmdegat01%2Fhassio-addons
+[add-repo]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url={{ repository.url }}
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
 [armhf-shield]: https://img.shields.io/badge/armhf-no-red.svg
 [armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
