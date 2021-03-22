@@ -124,12 +124,15 @@ the options available and how to configure them. The documentation also provides
 
 ### Port: `9080/tcp`
 
-Promtail exposes an HTTP server on this port. There's not a lot of documentation
-on what this is used for. From what is there I believe it is primarily used in
-larger scale Kubernetes deployments for things like healthchecks or where you
-potentially have multiple Promtail instances communicating. Most likely you
-should just leave this option disabled but if you know what you're doing you
-can expose this HTTP server on the host.
+Promtail exposes an HTTP server on this port. There's not any obvious section
+in the documentation describing the API it exposesbut there are a few references.
+I believe it's primary use is in larger scale Kubernetes deployments for things
+like healthchecks or multiple Promtail instances communicating. There is also
+a special pipeline stage called [metrics][promtail-doc-metrics] which can be used
+to create metrics exposed directly from promtail via its API.
+
+Most likely you should just leave this option disabled but if you know what you're
+doing you can expose this HTTP server on the host.
 
 ### Option: `log_level`
 
@@ -268,7 +271,8 @@ SOFTWARE.
 [loki-doc]: https://grafana.com/docs/loki/latest/overview/
 [loki-in-grafana]: https://grafana.com/docs/loki/latest/getting-started/grafana/
 [mdegat01]: https://github.com/mdegat01
-[promtail-doc-scrape-configs]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#scrape_configs
 [promtail-doc-examples]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#example-static-config
+[promtil-doc-metrics]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#metrics
+[promtail-doc-scrape-configs]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#scrape_configs
 [releases]: https://github.com/mdegat01/addon-promtail/releases
 [semver]: http://semver.org/spec/v2.0.0
