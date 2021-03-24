@@ -13,6 +13,7 @@
 [![Github Actions][github-actions-shield]][github-actions]
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
+[![Community Forum][forum-shield]][forum]
 
 [Promtail][promtail] is an agent which ships the contents of local logs to a private
 [Loki][loki] instance or [Grafana Cloud][grafana-cloud]. It is usually deployed
@@ -94,8 +95,8 @@ SOFTWARE.
 [commits]: https://github.com/mdegat01/addon-promtail/commits/main
 [contributors]: https://github.com/mdegat01/addon-promtail/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
-[docs]: https://github.com/mdegat01/addon-promtail/blob/main/promtail/DOCS.md
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
 [forum]: https://community.home-assistant.io?u=CentralCommand
 [grafana-cloud]: https://grafana.com/products/cloud/
 [loki]: https://grafana.com/oss/loki
