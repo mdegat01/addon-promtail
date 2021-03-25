@@ -19,17 +19,14 @@
 [Loki][loki] instance or [Grafana Cloud][grafana-cloud]. It is usually deployed
 to every machine that has applications needed to be monitored.
 
-⛔ **Known Issue** - This add-on is waiting on upcoming supervisor functionality
-to function, specifically [this PR](https://github.com/home-assistant/supervisor/pull/2722).
-Once that makes its way into the supervisor release I will update the add-on
-to use the new `journald` config. Until then this add-on cannot scrape logs from
-the system journal as promised. If you choose to use it before that you should set
-`skip_default_scrape_config` to `true` and provide a file for `additional_scrape_configs`
-as it will only be able to see log files created by add-ons.
-
 [![Open your Home Assistant instance and show the add add-on repository dialog
 with a specific repository URL pre-filled.][add-repo-shield]][add-repo]
 [![Open your Home Assistant instance and show the dashboard of a Supervisor add-on.][add-addon-shield]][add-addon]
+
+⚠ This addon requires supervisor version `2021.03.7` to install as it relies on
+the new `journald` capability just added. This is the current beta release as
+of 3/24. If you don't want to join the beta channel, you can wait until it becomes
+the stable release in a couple days.
 
 ## About
 
