@@ -113,9 +113,8 @@ the contents of this file:
         __path__: /share/zigbee2mqtt/log/**.txt
 ```
 
-This particular example would cause Promtail to scrape up the log of published
-MQTT messages that the [Zigbee2MQTT add-on][addon-z2m] creates in addition to
-the normal journal logs.
+This particular example would cause Promtail to scrape up the logs MQTT that the
+[Zigbee2MQTT add-on][addon-z2m] makes by default.
 
 Promtail provides a lot of options for configuring scrape configs. See the
 documentation on [scrape_configs][promtail-doc-scrape-configs] for more info on
