@@ -4,15 +4,8 @@
 ![Project Stage][project-stage-shield]
 [![License][license-shield]](LICENSE.md)
 
-![Supports aarch64 Architecture][aarch64-shield]
-![Supports amd64 Architecture][amd64-shield]
-![Supports armhf Architecture][armhf-shield]
-![Supports armv7 Architecture][armv7-shield]
-![Supports i386 Architecture][i386-shield]
-
-[![Github Actions][github-actions-shield]][github-actions]
 ![Project Maintenance][maintenance-shield]
-[![GitHub Activity][commits-shield]][commits]
+[![Community Forum][forum-shield]][forum]
 
 [Promtail][promtail] is an agent which ships the contents of local logs to a private
 [Loki][loki] instance or [Grafana Cloud][grafana-cloud]. It is usually deployed
@@ -25,10 +18,6 @@ to use the new `journald` config. Until then this add-on cannot scrape logs from
 the system journal as promised. If you choose to use it before that you should set
 `skip_default_scrape_config` to `true` and provide a file for `additional_scrape_configs`
 as it will only be able to see log files created by add-ons.
-
-[![Open your Home Assistant instance and show the add add-on repository dialog
-with a specific repository URL pre-filled.][add-repo-shield]][add-repo]
-[![Open your Home Assistant instance and show the dashboard of a Supervisor add-on.][add-addon-shield]][add-addon]
 
 {% set repository = namespace(url='https%3A//github.com/mdegat01/hassio-addons', slug='39bd2704') %}
 {% if channel == "edge" %}
@@ -106,27 +95,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
-[add-addon-shield]: https://my.home-assistant.io/badges/supervisor_addon.svg
-[add-addon]: https://my.home-assistant.io/redirect/supervisor_addon/?addon={{ repository.slug }}_promtail
-[add-repo-shield]: https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg
-[add-repo]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url={{ repository.url }}
-[amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
-[armhf-shield]: https://img.shields.io/badge/armhf-no-red.svg
-[armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
-[commits-shield]: https://img.shields.io/github/commit-activity/y/mdegat01/addon-promtail.svg
-[commits]: https://github.com/mdegat01/addon-promtail/commits/main
 [contributors]: https://github.com/mdegat01/addon-promtail/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
-[docs]: https://github.com/mdegat01/addon-promtail/blob/main/promtail/DOCS.md
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
 [forum]: https://community.home-assistant.io?u=CentralCommand
 [grafana-cloud]: https://grafana.com/products/cloud/
 [loki]: https://grafana.com/oss/loki
 [mdegat01]: https://github.com/mdegat01
-[github-actions-shield]: https://github.com/mdegat01/addon-promtail/workflows/CI/badge.svg
-[github-actions]: https://github.com/mdegat01/addon-promtail/actions
-[i386-shield]: https://img.shields.io/badge/i386-no-red.svg
 [issue]: https://github.com/mdegat01/addon-promtail/issues
 [license-shield]: https://img.shields.io/github/license/mdegat01/addon-promtail.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg
