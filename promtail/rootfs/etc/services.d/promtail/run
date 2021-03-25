@@ -14,12 +14,16 @@ case "$(bashio::config 'log_level')" in \
   debug)	log_level='debug' ;; \
   *)		log_level='info' ;; \
 esac;
-bashio::log.info "Loki log level set to ${log_level}"
+bashio::log.info "Promtail log level set to ${log_level}"
 
 export "URL=$(bashio::config 'client.url')"
 export "LOG_LEVEL=$(bashio::config 'log_level')"
 
+promtail_args=("-config.expand-env=true" "-config.file=${promtail_config}")
+if [ "${log_level}" == "debug" ]; then
+  bashio::log.debug "Logging full config on startup for debugging..."
+  promtail_args+=("-print-config-stderr=true")
+fi
+
 bashio::log.info "Handing over control to Promtail..."
-promtail \
-  -config.expand-env=true \
-  -config.file=${promtail_config}
+promtail "${promtail_args[@]}"
