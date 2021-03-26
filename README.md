@@ -94,7 +94,7 @@ SOFTWARE.
 [discord-ha]: https://discord.gg/c5DvZ4e
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
-[forum]: https://community.home-assistant.io?u=CentralCommand
+[forum]: https://community.home-assistant.io/t/home-assistant-add-on-promtail/293732?u=CentralCommand
 [grafana-cloud]: https://grafana.com/products/cloud/
 [loki]: https://grafana.com/oss/loki
 [mdegat01]: https://github.com/mdegat01
@@ -104,7 +104,7 @@ SOFTWARE.
 [issue]: https://github.com/mdegat01/addon-promtail/issues
 [license-shield]: https://img.shields.io/github/license/mdegat01/addon-promtail.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg
-[project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
+[project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
 [promtail]: https://grafana.com/docs/loki/latest/clients/promtail/
 [releases-shield]: https://img.shields.io/github/release/mdegat01/addon-promtail.svg
 [releases]: https://github.com/mdegat01/addon-promtail/releases
