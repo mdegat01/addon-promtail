@@ -51,8 +51,7 @@ RUN set -eux; \
 
 COPY rootfs /
 RUN set -eux; \
-    mkdir -p /data/promtail; \
-    mkdir -p /var/log/journal;
+    mkdir -p /data/promtail;
 WORKDIR /data/promtail
 
 # Build arguments
