@@ -8,21 +8,28 @@
 bashio::log.info 'Starting Promtail...'
 promtail_config='/etc/promtail/config.yaml'
 
+journal_path='/var/log/journal'
+if ! bashio::fs.directory_exists "${journal_path}"; then
+    # Use volatile journal instead
+    journal_path='/run/log/journal'
+fi
+
 case "$(bashio::config 'log_level')" in \
-  error)	log_level='error' ;; \
-  warning)	log_level='warn' ;; \
-  debug)	log_level='debug' ;; \
-  *)		log_level='info' ;; \
+    error)	log_level='error' ;; \
+    warning)	log_level='warn' ;; \
+    debug)	log_level='debug' ;; \
+    *)		log_level='info' ;; \
 esac;
 bashio::log.info "Promtail log level set to ${log_level}"
 
 export "URL=$(bashio::config 'client.url')"
+export "JOURNAL_PATH=${journal_path}"
 export "LOG_LEVEL=$(bashio::config 'log_level')"
 
 promtail_args=("-config.expand-env=true" "-config.file=${promtail_config}")
 if [ "${log_level}" == "debug" ]; then
-  bashio::log.debug "Logging full config on startup for debugging..."
-  promtail_args+=("-print-config-stderr=true")
+    bashio::log.debug "Logging full config on startup for debugging..."
+    promtail_args+=("-print-config-stderr=true")
 fi
 
 bashio::log.info "Handing over control to Promtail..."
