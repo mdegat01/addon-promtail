@@ -5,7 +5,7 @@
     max_age: 12h
     labels:
       job: systemd-journal
-    path: /var/log/journal
+    path: "${JOURNAL_PATH}"
   relabel_configs:
     - source_labels:
         - __journal__systemd_unit
