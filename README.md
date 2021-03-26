@@ -23,7 +23,7 @@ to every machine that has applications needed to be monitored.
 with a specific repository URL pre-filled.][add-repo-shield]][add-repo]
 [![Open your Home Assistant instance and show the dashboard of a Supervisor add-on.][add-addon-shield]][add-addon]
 
-⚠ This addon requires supervisor version `2021.03.8` as it relies on the new 
+⚠ This addon requires supervisor version `2021.03.8` as it relies on the new
 `journald` capability just added. This is the current beta release as of 3/26.
 If you don't want to join the beta channel, you can wait until it becomes the
 stable release in a couple days.
