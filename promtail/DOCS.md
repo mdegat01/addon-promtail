@@ -128,15 +128,15 @@ what you can do with [LogQL][logql] can do at the other end.
 
 ### Port: `9080/tcp`
 
-Promtail exposes an HTTP server on this port. There's not any obvious section
-in the documentation describing the API it exposesbut there are a few references.
-I believe it's primary use is in larger scale Kubernetes deployments for things
-like healthchecks or multiple Promtail instances communicating. There is also
-a special pipeline stage called [metrics][promtail-doc-metrics] which can be used
-to create metrics exposed directly from promtail via its API.
+Promtail expose an [API][api] on this port. This is primarily used for healthchecks
+by the supervisor watchdog which does not require exposing it on the host. Most
+users should leave this option disabled unless you have an external application
+doing healthchecks.
 
-Most likely you should just leave this option disabled but if you know what you're
-doing you can expose this HTTP server on the host.
+For advanced users creating custom scrape configs the other purpose of this API
+is to expose metrics created by the [metrics][promtail-doc-metrics] pipeline
+stage. Exposing this port would then allow you to read those metrics from another
+system on your network.
 
 ### Option: `log_level`
 
@@ -264,6 +264,7 @@ SOFTWARE.
 [addon-grafana]: https://github.com/hassio-addons/addon-grafana
 [addon-loki-doc]: https://github.com/mdegat01/addon-loki/blob/main/loki/DOCS.md#grafana
 [addon-z2m]: https://github.com/zigbee2mqtt/hassio-zigbee2mqtt
+[api]: https://grafana.com/docs/loki/latest/clients/promtail/#api
 [contributors]: https://github.com/mdegat01/addon-promtail/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
