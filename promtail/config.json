@@ -7,6 +7,7 @@
   "description": "Promtail for Home Assistant",
   "journald": true,
   "map": ["share", "ssl"],
+  "watchdog": "http://[HOST]:[PORT:9080]/ready",
   "ports": {
     "9080/tcp": null
   },
