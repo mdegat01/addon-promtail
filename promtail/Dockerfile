@@ -1,4 +1,5 @@
-ARG BUILD_FROM
+# https://github.com/hassio-addons/addon-debian-base/releases
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.3
 
 # https://hub.docker.com/r/grafana/promtail
 # https://github.com/grafana/loki/releases
