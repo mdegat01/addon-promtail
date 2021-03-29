@@ -85,12 +85,14 @@ is using mTLS to authenticate clients. **Note**: This field is required if
 ### Option: `additional_pipeline_stages`
 
 The absolute path to a YAML file with a list of additional pipeline stages to
-apply to the [default journal scrape config][addon-default-config]. This file
-must contain only a YAML list of pipeline stages. They will be added to the end
-of the ones already listed. If you don't like what is listed, use `skip_default_scrape_config`
-and `additional_scrape_configs` to write your own instead.
+apply to the [default journal scrape config][addon-default-config]. The primary
+use of this is to apply additional processing to logs from particular add-ons
+you use if they are noisy or difficult to read.
 
-Here's an example of the contents of this file:
+This file must contain only a YAML list of pipeline stages. They will be added
+to the end of the ones already listed. If you don't like the ones listed, use
+`skip_default_scrape_config` and `additional_scrape_configs` to write your own
+instead. Here's an example of the contents of this file:
 
 ```yaml
 - match:
