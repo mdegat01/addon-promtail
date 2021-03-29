@@ -9,8 +9,8 @@ bashio::log.info 'Starting Promtail...'
 promtail_config='/etc/promtail/config.yaml'
 
 journal_path='/var/log/journal'
-if ! bashio::fs.directory_exists "${journal_path}"; then
-    # Use volatile journal instead
+if ! bashio::fs.directory_exists "${journal_path}" || [ -z "$(ls -A ${journal_path})" ]; then
+    bashio::log.info "No journal at ${journal_path}, looking for journal in /run/log/journal instead"
     journal_path='/run/log/journal'
 fi
 
