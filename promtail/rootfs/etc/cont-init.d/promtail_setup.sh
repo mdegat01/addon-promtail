@@ -19,7 +19,7 @@ if bashio::config.exists 'client.username'; then
         echo "    basic_auth:"
         echo "      username: $(bashio::config 'client.username')"
         echo "      password: $(bashio::config 'client.password')"
-    } >> $config_file
+    } >> "${config_file}"
 fi
 
 if bashio::config.exists 'client.cafile'; then
@@ -34,10 +34,10 @@ if bashio::config.exists 'client.cafile'; then
     {
         echo "    tls_config:"
         echo "      ca_file: $(bashio::config 'client.cafile')"
-    } >> $config_file
+    } >> "${config_file}"
 
     if bashio::config.exists 'client.servername'; then
-        echo "      server_name: $(bashio::config 'client.servername')" >> $config_file
+        echo "      server_name: $(bashio::config 'client.servername')" >> "${config_file}"
     fi
 
     if bashio::config.exists 'client.certfile'; then
@@ -60,7 +60,7 @@ if bashio::config.exists 'client.cafile'; then
         {
             echo "      cert_file: $(bashio::config 'client.certfile')"
             echo "      key_file: $(bashio::config 'client.keyfile')"
-        } >> $config_file
+        } >> "${config_file}"
     fi
 fi
 
@@ -68,7 +68,7 @@ fi
 {
     echo
     echo "scrape_configs:"
-} >> $config_file
+} >> "${config_file}"
 if bashio::config.true 'skip_default_scrape_config'; then
     bashio::log.info 'Skipping default journald scrape config...'
     if bashio::config.exists 'additional_pipeline_stages'; then
@@ -79,7 +79,7 @@ if bashio::config.true 'skip_default_scrape_config'; then
     fi
     bashio::config.require 'additional_scrape_configs' "'skip_default_scrape_config' is true"
 
-elif bashio::config.exists'additional_pipeline_stages'; then
+elif bashio::config.exists 'additional_pipeline_stages'; then
     bashio::log.info "Adding additional pipeline stages to default journal scrape config..."
     add_stages="$(bashio::config 'additional_pipeline_stages')"
     scrape_configs=/etc/promtail/journal-scrape-configs.yaml
@@ -96,7 +96,7 @@ elif bashio::config.exists'additional_pipeline_stages'; then
         $def_scrape_configs "${add_stages}" \
     | yq -NP e \
         '[(.[0] * .[1]) | {"job_name": .job_name, "journal": .journal, "relabel_configs": .relabel_configs, "pipeline_stages": .pipeline_stages + .add_pipeline_stages}]' \
-        - > $scrape_configs
+        - > "${scrape_configs}"
 fi
 
 if bashio::config.exists 'additional_scrape_configs'; then
@@ -111,11 +111,11 @@ if bashio::config.exists 'additional_scrape_configs'; then
     fi
 
     if bashio::config.true 'skip_default_scrape_config'; then
-        yq -NP e '[] + .' "$add_scrape_configs" >> $config_file
+        yq -NP e '[] + .' "${add_scrape_configs}" >> "${config_file}"
     else
         yq -NP eval-all 'select(fi == 0) + select(fi == 1)' \
-            $scrape_configs "$add_scrape_configs" >> $config_file
+            "${scrape_configs}" "${add_scrape_configs}" >> "${config_file}"
     fi
 else
-    yq -NP e '[] + .' $scrape_configs >> $config_file
+    yq -NP e '[] + .' "${scrape_configs}" >> "${config_file}"
 fi
