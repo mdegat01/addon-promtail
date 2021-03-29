@@ -82,6 +82,33 @@ The absolute path to the key for the client-authentication certificate if Loki
 is using mTLS to authenticate clients. **Note**: This field is required if
 `client.certfile` is provided
 
+### Option: `additional_pipeline_stages`
+
+The absolute path to a YAML file with a list of additional pipeline stages to
+apply to the [default journal scrape config][addon-default-config]. This file
+must contain only a YAML list of pipeline stages. They will be added to the end
+of the ones already listed. If you don't like what is listed, use `skip_default_scrape_config`
+and `additional_scrape_configs` to write your own instead.
+
+Here's an example of the contents of this file:
+
+```yaml
+- match:
+    selector: '{container_name="addon_cebe7a76_hassio_google_drive_backup"}'
+    stages:
+      - multiline:
+          firstline: '^\x{001b}'
+```
+
+This particular example applies to the [google drive backup addon][addon-google-drive-backup].
+It uses the same log format as Home Assistant and outputs the escape character
+at the start of each log line for color-coding in terminals. Looking for that
+in a multiline stage makes it so tracebacks are included in the same log entry
+as the error that caused them for easier readability.
+
+See the [promtail documenation][promtail-doc-stages] for more information on how
+to configure pipeline stages.
+
 ### Option: `skip_default_scrape_config`
 
 Promtail will scrape the `systemd journal` using a pre-defined config you can
@@ -262,6 +289,7 @@ SOFTWARE.
 [add-repo]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fmdegat01%2Fhassio-addons
 [addon-default-config]: https://github.com/mdegat01/addon-promtail/blob/main/promtail/rootfs/etc/promtail/default-scrape-config.yaml
 [addon-grafana]: https://github.com/hassio-addons/addon-grafana
+[addon-google-drive-backup]: https://github.com/sabeechen/hassio-google-drive-backup
 [addon-loki-doc]: https://github.com/mdegat01/addon-loki/blob/main/loki/DOCS.md#grafana
 [addon-z2m]: https://github.com/zigbee2mqtt/hassio-zigbee2mqtt
 [api]: https://grafana.com/docs/loki/latest/clients/promtail/#api
@@ -281,5 +309,6 @@ SOFTWARE.
 [promtail-doc-examples]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#example-static-config
 [promtil-doc-metrics]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#metrics
 [promtail-doc-scrape-configs]: https://grafana.com/docs/loki/latest/clients/promtail/configuration/#scrape_configs
+[promtail-doc-stages]: https://grafana.com/docs/loki/latest/clients/promtail/stages/
 [releases]: https://github.com/mdegat01/addon-promtail/releases
 [semver]: http://semver.org/spec/v2.0.0
