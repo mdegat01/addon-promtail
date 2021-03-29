@@ -19,3 +19,9 @@
     - source_labels:
         - __journal_container_name
       target_label: container_name
+  pipeline_stages:
+    - match:
+        selector: '{container_name=~"homeassistant|hassio_supervisor"}'
+        stages:
+          - multiline:
+              firstline: '^\x{001b}'
