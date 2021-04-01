@@ -52,7 +52,9 @@ RUN set -eux; \
 
 COPY rootfs /
 RUN set -eux; \
-    mkdir -p /data/promtail;
+    mkdir -p /data/promtail; \
+    useradd -u 12345 -U -d /data/promtail/ -s /bin/false promtail; \
+    usermod -G users promtail;
 WORKDIR /data/promtail
 
 # Build arguments
