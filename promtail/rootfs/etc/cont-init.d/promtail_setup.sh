@@ -119,3 +119,6 @@ if bashio::config.exists 'additional_scrape_configs'; then
 else
     yq -NP e '[] + .' "${scrape_configs}" >> "${config_file}"
 fi
+
+# permissions
+chown -R promtail:promtail /data/promtail
