@@ -1,13 +1,32 @@
 # https://github.com/hassio-addons/addon-debian-base/releases
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.3
 
-# https://hub.docker.com/r/grafana/promtail
+FROM golang:1.16.2-buster as build
+
 # https://github.com/grafana/loki/releases
-FROM grafana/promtail:2.2.0 as build
+ENV LOKI_VERSION 2.2.0
+
+# Must build binary from source on system with journal support. Published binaries on release do not include this.
+RUN set -eux; \
+    echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list; \
+    apt-get update; \
+    apt-get install -qy --no-install-recommends \ 
+        -t buster-backports \
+        libsystemd-dev=247.3-3~bpo10+1 \
+        ; \
+    curl -J -L -o /tmp/loki.tar.gz "https://github.com/grafana/loki/archive/refs/tags/v${LOKI_VERSION}.tar.gz"; \
+    tar -xf /tmp/loki.tar.gz -C /src; \
+    mv "/src/loki-${LOKI_VERSION}" /src/loki;
+
+WORKDIR /src/loki
+RUN make BUILD_IN_CONTAINER=false promtail
 
 # hadolint ignore=DL3006
 FROM $BUILD_FROM
 ARG BUILD_ARCH=amd64
+
+# Add promtail
+COPY --from=build /src/loki/cmd/promtail/promtail /usr/bin/promtail
 
 # tzdata required for the timestamp stage to work
 # Backports repo required to get a libsystemd version 246 or newer which is required to handle journal +ZSTD compression
@@ -23,10 +42,8 @@ RUN set -eux; \
         libsystemd-dev=247.3-3~bpo10+1 \
         ; \
     update-ca-certificates; \
+    promtail --version; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
-
-# Add promtail
-COPY --from=build /usr/bin/promtail /usr/bin/promtail
 
 # yq is used to merge YAML files
 # https://github.com/mikefarah/yq/releases
