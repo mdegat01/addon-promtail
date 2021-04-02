@@ -15,10 +15,10 @@ if ! bashio::fs.directory_exists "${journal_path}" || [ -z "$(ls -A ${journal_pa
 fi
 
 case "$(bashio::config 'log_level')" in \
-    error)	log_level='error' ;; \
+    error)	    log_level='error' ;; \
     warning)	log_level='warn' ;; \
-    debug)	log_level='debug' ;; \
-    *)		log_level='info' ;; \
+    debug)	    log_level='debug' ;; \
+    *)		    log_level='info' ;; \
 esac;
 bashio::log.info "Promtail log level set to ${log_level}"
 
