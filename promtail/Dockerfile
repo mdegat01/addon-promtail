@@ -15,6 +15,7 @@ RUN set -eux; \
         libsystemd-dev=247.3-3~bpo10+1 \
         ; \
     curl -J -L -o /tmp/loki.tar.gz "https://github.com/grafana/loki/archive/refs/tags/v${LOKI_VERSION}.tar.gz"; \
+    mkdir -p /src; \
     tar -xf /tmp/loki.tar.gz -C /src; \
     mv "/src/loki-${LOKI_VERSION}" /src/loki;
 
