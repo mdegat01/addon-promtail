@@ -3,7 +3,7 @@
   "url": "https://github.com/mdegat01/addon-promtail",
   "version": "edge",
   "slug": "promtail",
-  "arch": ["aarch64", "amd64", "armv7"],
+  "arch": ["aarch64", "amd64", "armv7", "armhf"],
   "description": "Promtail for Home Assistant",
   "journald": true,
   "map": ["share", "ssl"],
