@@ -1,10 +1,34 @@
 # https://github.com/hassio-addons/addon-debian-base/releases
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.3
 
-FROM golang:1.16.2-buster as build
+# yq is used to merge YAML files
+# https://github.com/mikefarah/yq/releases
+FROM alpine:3.13.4 as build_yq
+ARG BUILD_ARCH=amd64
+ENV YQ_VERSION 4.6.1
+
+RUN set -eux; \
+    apk update; \
+    apk add --no-cache --virtual .build-deps \
+        tar=1.33-r1 \
+        curl=7.74.0-r1 \
+        ; \
+    case "$BUILD_ARCH" in \
+        amd64)  BINARCH='amd64' ;; \
+        armhf)   BINARCH='arm' ;; \
+        armv7)   BINARCH='arm' ;; \
+        aarch64) BINARCH='arm64' ;; \
+        *) echo >&2 "error: unsupported architecture ($BUILD_ARCH)"; exit 1 ;; \
+    esac; \
+    curl -J -L -o /tmp/yq.tar.gz "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${BINARCH}.tar.gz"; \
+    tar -xf /tmp/yq.tar.gz -C /usr/bin; \
+    mv /usr/bin/yq_linux_${BINARCH} /usr/bin/yq;
+
 
 # https://github.com/grafana/loki/releases
+FROM golang:1.16.2-buster as build_loki
 ENV LOKI_VERSION 2.2.0
+WORKDIR /src
 
 # Must build binary from source on system with journal support. Published binaries on release do not include this.
 RUN set -eux; \
@@ -15,19 +39,14 @@ RUN set -eux; \
         libsystemd-dev=247.3-3~bpo10+1 \
         ; \
     curl -J -L -o /tmp/loki.tar.gz "https://github.com/grafana/loki/archive/refs/tags/v${LOKI_VERSION}.tar.gz"; \
-    mkdir -p /src; \
     tar -xf /tmp/loki.tar.gz -C /src; \
-    mv "/src/loki-${LOKI_VERSION}" /src/loki;
+    mv "/src/loki-${LOKI_VERSION}" /src/loki; \
+    cd /src/loki; \
+    make BUILD_IN_CONTAINER=false promtail;
 
-WORKDIR /src/loki
-RUN make BUILD_IN_CONTAINER=false promtail
 
 # hadolint ignore=DL3006
 FROM $BUILD_FROM
-ARG BUILD_ARCH=amd64
-
-# Add promtail
-COPY --from=build /src/loki/cmd/promtail/promtail /usr/bin/promtail
 
 # tzdata required for the timestamp stage to work
 # Backports repo required to get a libsystemd version 246 or newer which is required to handle journal +ZSTD compression
@@ -46,31 +65,16 @@ RUN set -eux; \
     promtail --version; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
-# yq is used to merge YAML files
-# https://github.com/mikefarah/yq/releases
-ENV YQ_VERSION 4.6.1
 
-# Add yq (and its dependency, jq)
+# Add promtail & yq
+COPY --from=build_loki /src/loki/cmd/promtail/promtail /usr/bin/promtail
+COPY --from=build_yq /usr/bin/yq /usr/bin/yq
 RUN set -eux; \
-    apt-get install -qy --no-install-recommends \
-        jq=1.5+dfsg-2+b1 \
-        ; \
-    case "$BUILD_ARCH" in \
-        amd64)  BINARCH='amd64' ;; \
-        armhf)   BINARCH='arm' ;; \
-        armv7)   BINARCH='arm' ;; \
-        aarch64) BINARCH='arm64' ;; \
-        *) echo >&2 "error: unsupported architecture ($BUILD_ARCH)"; exit 1 ;;\
-    esac; \
-    curl -J -L -o /tmp/yq.tar.gz "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${BINARCH}.tar.gz"; \
-    tar -xf /tmp/yq.tar.gz -C /usr/bin; \
-    mv /usr/bin/yq_linux_${BINARCH} /usr/bin/yq; \
     chmod a+x /usr/bin/yq; \
-    rm -rf /tmp/*;
+    yq --version; \
+    promtail --version;
 
 COPY rootfs /
-RUN set -eux; \
-    mkdir -p /data/promtail;
 WORKDIR /data/promtail
 
 # Build arguments
