@@ -298,7 +298,7 @@ SOFTWARE.
 [contributors]: https://github.com/mdegat01/addon-promtail/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
-[forum]: https://community.home-assistant.io?u=CentralCommand
+[forum]: https://community.home-assistant.io/t/home-assistant-add-on-promtail/293732?u=CentralCommand
 [grafana]: https://grafana.com/oss/grafana/
 [grafana-cloud]: https://grafana.com/products/cloud/
 [grafana-cloud-docs-promtail]: https://grafana.com/docs/grafana-cloud/quickstart/logs_promtail_linuxnode/
