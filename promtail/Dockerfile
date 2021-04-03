@@ -22,13 +22,13 @@ RUN set -eux; \
     esac; \
     curl -J -L -o /tmp/yq.tar.gz "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${BINARCH}.tar.gz"; \
     tar -xf /tmp/yq.tar.gz -C /usr/bin; \
-    mv /usr/bin/yq_linux_${BINARCH} /usr/bin/yq;
+    mv /usr/bin/yq_linux_${BINARCH} /usr/bin/yq; \
+    chmod a+x /usr/bin/yq;
 
 
 # https://github.com/grafana/loki/releases
 FROM golang:1.16.2-buster as build_loki
 ENV LOKI_VERSION 2.2.0
-WORKDIR /src
 
 # Must build binary from source on system with journal support. Published binaries on release do not include this.
 RUN set -eux; \
@@ -39,10 +39,12 @@ RUN set -eux; \
         libsystemd-dev=247.3-3~bpo10+1 \
         ; \
     curl -J -L -o /tmp/loki.tar.gz "https://github.com/grafana/loki/archive/refs/tags/v${LOKI_VERSION}.tar.gz"; \
+    mkdir -p /src; \
     tar -xf /tmp/loki.tar.gz -C /src; \
-    mv "/src/loki-${LOKI_VERSION}" /src/loki; \
-    cd /src/loki; \
-    make BUILD_IN_CONTAINER=false promtail;
+    mv "/src/loki-${LOKI_VERSION}" /src/loki;
+
+WORKDIR /src/loki
+RUN make BUILD_IN_CONTAINER=false promtail
 
 
 # hadolint ignore=DL3006
@@ -62,7 +64,6 @@ RUN set -eux; \
         libsystemd-dev=247.3-3~bpo10+1 \
         ; \
     update-ca-certificates; \
-    promtail --version; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
 
@@ -70,7 +71,6 @@ RUN set -eux; \
 COPY --from=build_loki /src/loki/cmd/promtail/promtail /usr/bin/promtail
 COPY --from=build_yq /usr/bin/yq /usr/bin/yq
 RUN set -eux; \
-    chmod a+x /usr/bin/yq; \
     yq --version; \
     promtail --version;
 
