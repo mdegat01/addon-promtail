@@ -14,7 +14,7 @@ RUN set -eux; \
         ; \
     APKARCH="$(apk --print-arch)"; \
     case "${APKARCH}" in \
-        amd64)  BINARCH='amd64' ;; \
+        x86_64)  BINARCH='amd64' ;; \
         armhf)   BINARCH='arm' ;; \
         armv7)   BINARCH='arm' ;; \
         aarch64) BINARCH='arm64' ;; \
