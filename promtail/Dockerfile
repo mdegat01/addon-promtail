@@ -4,7 +4,6 @@ ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.3
 # yq is used to merge YAML files
 # https://github.com/mikefarah/yq/releases
 FROM alpine:3.13.4 as build_yq
-ARG BUILD_ARCH=amd64
 ENV YQ_VERSION 4.6.1
 
 RUN set -eux; \
@@ -13,12 +12,13 @@ RUN set -eux; \
         tar=1.33-r1 \
         curl=7.74.0-r1 \
         ; \
-    case "$BUILD_ARCH" in \
-        amd64)  BINARCH='amd64' ;; \
+    APKARCH="$(apk --print-arch)"; \
+    case "${APKARCH}" in \
+        x86_64)  BINARCH='amd64' ;; \
         armhf)   BINARCH='arm' ;; \
         armv7)   BINARCH='arm' ;; \
         aarch64) BINARCH='arm64' ;; \
-        *) echo >&2 "error: unsupported architecture ($BUILD_ARCH)"; exit 1 ;; \
+        *) echo >&2 "error: unsupported architecture (${APKARCH})"; exit 1 ;; \
     esac; \
     curl -J -L -o /tmp/yq.tar.gz "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${BINARCH}.tar.gz"; \
     tar -xf /tmp/yq.tar.gz -C /usr/bin; \
