@@ -43,7 +43,7 @@ RUN yq --version
 # Add promtail
 COPY --from=build /usr/bin/promtail /usr/bin/promtail
 # See https://github.com/grafana/loki/blob/v2.2.0/cmd/promtail/Dockerfile.arm32#L21
-RUN if [[ ${BUILD_ARCH} =~ armv7|armhf ]] && [ ! -f /lib/ld-linux-armhf.so.3 ]; then \
+RUN if [[ ${BUILD_ARCH} == armhf ]] && [ ! -f /lib/ld-linux-armhf.so.3 ]; then \
         echo 'RE-LINKING LD-LINUX-ARMHF.SO.3' \
         && ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3; \
     fi
