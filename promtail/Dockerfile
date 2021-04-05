@@ -17,6 +17,9 @@ FROM grafana/promtail:${PROMTAIL_VERSION}-${BUILD_IMAGE_ARCH} as build
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
+# Set shell
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # tzdata required for the timestamp stage to work
 # Backports repo required to get a libsystemd version 246 or newer which is required to handle journal +ZSTD compression
 RUN set -eux; \
@@ -41,8 +44,7 @@ RUN yq --version
 # Add promtail
 COPY --from=build /usr/bin/promtail /usr/bin/promtail
 # See https://github.com/grafana/loki/blob/v2.2.0/cmd/promtail/Dockerfile.arm32#L21
-ARG BUILD_IMAGE_ARCH=amd64
-RUN [ ${BUILD_IMAGE_ARCH} = "arm" ] \
+RUN [[ ${BUILD_ARCH} =~ armv7|armhf ]] \
     && [ ! -f /lib/ld-linux-armhf.so.3 ] \
     && echo RE-LINKING LD-LINUX-ARMHF.SO.3 \
     && ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3
