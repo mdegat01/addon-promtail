@@ -84,14 +84,19 @@ jobs:
           echo "::set-output name=from::${from}"
           if [[ "${{ matrix.architecture}}" = "amd64" ]]; then
             echo "::set-output name=platform::linux/amd64"
+            echo "::set-output name=image_arch::amd64"
           elif [[ "${{ matrix.architecture }}" = "i386" ]]; then
             echo "::set-output name=platform::linux/386"
+            echo "::set-output name=image_arch::386"
           elif [[ "${{ matrix.architecture }}" = "armhf" ]]; then
             echo "::set-output name=platform::linux/arm/v6"
+            echo "::set-output name=image_arch::arm"
           elif [[ "${{ matrix.architecture }}" = "armv7" ]]; then
             echo "::set-output name=platform::linux/arm/v7"
+            echo "::set-output name=image_arch::arm"
           elif [[ "${{ matrix.architecture }}" = "aarch64" ]]; then
             echo "::set-output name=platform::linux/arm64/v8"
+            echo "::set-output name=image_arch::arm64"
           else
             echo "::error ::Could not determine platform for architecture ${{ matrix.architecture }}"
             exit 1
@@ -127,6 +132,7 @@ jobs:
             BUILD_REF=${{ github.sha }}
             BUILD_REPOSITORY=${{ github.repository }}
             BUILD_VERSION=${{ needs.information.outputs.version }}
+            BUILD_IMAGE_ARCH=${{ steps.flags.outputs.image_arch }}
   publish-edge:
     name: 📢 Publish to edge repository
     if: needs.information.outputs.environment == 'edge'
