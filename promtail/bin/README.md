@@ -11,3 +11,4 @@ To update binaries, do the following:
 1. Download `yq_linux_amd64`.
 1. Download `yq_linux_arm` and copy to `yq_linux_armhf` and `yq_linux_armv7`.
 1. Download `yq_linux_arm64` and rename to `yq_linux_aarch64`.
+1. Run `chmod +x yq_linux_*`.

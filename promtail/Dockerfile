@@ -41,15 +41,14 @@ RUN set -eux; \
     update-ca-certificates; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
-
-# Add promtail & yq
+# Add yq
 ARG BUILD_ARCH=amd64
 COPY bin/yq_linux_${BUILD_ARCH} /usr/bin/yq
-COPY --from=build_loki /src/loki/cmd/promtail/promtail /usr/bin/promtail
+RUN yq --version
 
-RUN set -eux; \
-    yq --version; \
-    promtail --version;
+# Add promtail
+COPY --from=build_loki /src/loki/cmd/promtail/promtail /usr/bin/promtail
+RUN promtail --version
 
 COPY rootfs /
 WORKDIR /data/promtail
