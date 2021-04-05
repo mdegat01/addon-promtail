@@ -44,10 +44,8 @@ RUN yq --version
 # Add promtail
 COPY --from=build /usr/bin/promtail /usr/bin/promtail
 # See https://github.com/grafana/loki/blob/v2.2.0/cmd/promtail/Dockerfile.arm32#L21
-RUN [[ ${BUILD_ARCH} =~ armv7|armhf ]] \
-    && [ ! -f /lib/ld-linux-armhf.so.3 ] \
-    && echo RE-LINKING LD-LINUX-ARMHF.SO.3 \
-    && ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3
+ARG BUILD_IMAGE_ARCH=amd64
+RUN sh -c '[ ${BUILD_IMAGE_ARCH} = arm ] && [ ! -f /lib/ld-linux-armhf.so.3 ] && echo RE-LINKING LD-LINUX-ARMHF.SO.3 && ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3'
 RUN promtail --version
 
 COPY rootfs /
