@@ -1,18 +1,17 @@
 # https://github.com/hassio-addons/addon-debian-base/releases
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.3
 
-# Grafana builds promtail images for amd64, arm and arm64 with journal support
-# Binary can be pulled from them for each arch we support but need a mapping
-# Won't just work since they don't tag any with `linux/arm/v6` (i.e. `armhf`)
-# amd64 -> amd64, armv7 & armhf -> arm, aarch64 -> arm64
+# Grafana build Promtail images for amd64, armv7 and aarch64 with journal support
+# They also make a separate arm image we can use for armhf but with difficulty
+# Conditionally setting a postfix for image location only for armhf
 # Note: build.json can't really do this, workflows modified to set this arg
-ARG BUILD_IMAGE_ARCH=amd64
+ARG BUILD_IMAGE_ARCH=
 
 # https://github.com/grafana/loki/releases
 ARG PROMTAIL_VERSION=2.2.0
 
 # https://hub.docker.com/r/grafana/promtail
-FROM grafana/promtail:${PROMTAIL_VERSION}-${BUILD_IMAGE_ARCH} as build
+FROM grafana/promtail:${PROMTAIL_VERSION}${BUILD_IMAGE_ARCH} as build
 
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
@@ -44,7 +43,6 @@ RUN yq --version
 # Add promtail
 COPY --from=build /usr/bin/promtail /usr/bin/promtail
 # See https://github.com/grafana/loki/blob/v2.2.0/cmd/promtail/Dockerfile.arm32#L21
-ARG BUILD_IMAGE_ARCH=amd64
 RUN if [[ ${BUILD_ARCH} =~ armv7|armhf ]] && [ ! -f /lib/ld-linux-armhf.so.3 ]; then \
         echo 'RE-LINKING LD-LINUX-ARMHF.SO.3' \
         && ln -s /lib/ld-linux.so.3 /lib/ld-linux-armhf.so.3; \
