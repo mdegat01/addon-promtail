@@ -4,8 +4,5 @@
     "armhf": "ghcr.io/hassio-addons/debian-base/armhf:4.1.3",
     "armv7": "ghcr.io/hassio-addons/debian-base/armv7:4.1.3",
     "aarch64": "ghcr.io/hassio-addons/debian-base/aarch64:4.1.3"
-  },
-  "args": {
-    "PROMTAIL_BASE_VERSION": "1.0.0"
   }
 }
