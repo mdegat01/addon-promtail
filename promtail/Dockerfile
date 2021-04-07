@@ -13,7 +13,7 @@ ENV YQ_VERSION 4.6.3
 RUN set -eux; \
     apk update; \
     apk add --no-cache --virtual .build-deps \
-        tar=1.33-r1 \
+        tar=1.34-r0 \
         curl=7.74.0-r1 \
     ; \
     APKARCH="$(apk --print-arch)"; \
