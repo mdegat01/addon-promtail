@@ -6,9 +6,6 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   # Send signals to children
   signal (send) set=(kill,term,int,hup,cont),
 
-  # Send & receive tcp traffic
-  network tcp,
-
   # S6-Overlay
   /init rix,
   /bin/** rix,
