@@ -27,7 +27,7 @@ bashio::log.info "Promtail log level set to ${log_level}"
 
 export "URL=$(bashio::config 'client.url')"
 export "JOURNAL_PATH=${journal_path}"
-export "LOG_LEVEL=$(bashio::config 'log_level')"
+export "LOG_LEVEL=${log_level}"
 
 promtail_args=("-config.expand-env=true" "-config.file=${promtail_config}")
 if [ "${log_level}" == "debug" ]; then
