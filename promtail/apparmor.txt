@@ -1,21 +1,28 @@
 include <tunables/global>
 
-profile promtail flags=(complain,attach_disconnected,mediate_deleted) {
+profile promtail flags=(attach_disconnected,mediate_deleted) {
   include <abstractions/base>
 
   # Send signals to children
   signal (send) set=(kill,term,int,hup,cont),
 
+  # Send & receive tcp traffic
+  network tcp,
+
   # S6-Overlay
   /init rix,
-  /bin/** ix,
-  /usr/bin/** ix,
+  /bin/** rix,
+  /usr/bin/** rix,
   /etc/s6/** rix,
   /run/s6/** rwix,
   /etc/services.d/** rwix,
   /etc/cont-init.d/** rwix,
   /etc/cont-finish.d/** rwix,
+  /etc/fix-attrs.d/** rw,
   /run/** rwk,
+  /dev/tty rw,
+  /etc/** r,
+  /dev/null k,
 
   # Bashio
   /usr/lib/bashio/** ix,
@@ -28,9 +35,16 @@ profile promtail flags=(complain,attach_disconnected,mediate_deleted) {
   /etc/promtail/** rw,
   /share/** r,
   /ssl/** r,
-  /var/log/** r,
+  /var/log/journal** r,
 
-  profile /usr/bin/promtail flags=(complain,attach_disconnected,mediate_deleted) {
+  # Programs
+  /usr/bin/promtail cx,
+  /usr/bin/yq Cx,
+
+  # Shell access
+  owner @{HOME}/* rw,
+
+  profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
     
     # Receive signals from S6-Overlay
@@ -40,17 +54,41 @@ profile promtail flags=(complain,attach_disconnected,mediate_deleted) {
     network tcp,
 
     # Executables
-    /bin/** ix,
-    /usr/bin/** ix,
+    /bin/** rix,
+    /usr/bin/** rix,
 
     # Addon data
     /data/promtail/** rw,
-    /run/log/journal/** r,
-    /var/log/journal/** r,
+
+    # Log sources
+    /run/log/journal** r,
+    /var/log/journal** r,
+    /share/** r,
 
     # Config
     /etc/promtail/config.yaml r,
-    /share/** r,
     /ssl/** r,
+
+    # Runtime usage
+    /etc/hosts r,
+    /etc/resolv.conf r,
+    /etc/passwd r,
+    /etc/nsswitch.conf r,
+    /proc/sys/net/core/somaxconn r,
+    /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+    /dev/null k,
+  }
+
+  profile /usr/bin/yq flags=(attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+
+    # Config files
+    /etc/promtail/* rw,
+    /share/** r,
+
+    # Runtime usage
+    /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+    /usr/bin/yq rm,
+    /dev/null k,
   }
 }
