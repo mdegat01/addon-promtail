@@ -1,0 +1,56 @@
+include <tunables/global>
+
+profile promtail flags=(complain,attach_disconnected,mediate_deleted) {
+  include <abstractions/base>
+
+  # Send signals to children
+  signal (send) set=(kill,term,int,hup,cont),
+
+  # S6-Overlay
+  /init rix,
+  /bin/** ix,
+  /usr/bin/** ix,
+  /etc/s6/** rix,
+  /run/s6/** rwix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /run/** rwk,
+
+  # Bashio
+  /usr/lib/bashio/** ix,
+  /tmp/** rw,
+
+  # Options.json & addon data
+  /data/** rw,
+
+  # Files needed for setup
+  /etc/promtail/** rw,
+  /share/** r,
+  /ssl/** r,
+  /var/log/** r,
+
+  profile /usr/bin/promtail flags=(complain,attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+    
+    # Receive signals from S6-Overlay
+    signal receive,
+
+    # Send & receive tcp traffic
+    network tcp,
+
+    # Executables
+    /bin/** ix,
+    /usr/bin/** ix,
+
+    # Addon data
+    /data/promtail/** rw,
+    /run/log/journal/** r,
+    /var/log/journal/** r,
+
+    # Config
+    /etc/promtail/config.yaml r,
+    /share/** r,
+    /ssl/** r,
+  }
+}
