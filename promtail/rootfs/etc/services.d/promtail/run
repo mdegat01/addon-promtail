@@ -36,4 +36,4 @@ if [ "${log_level}" == "debug" ]; then
 fi
 
 bashio::log.info "Handing over control to Promtail..."
-promtail "${promtail_args[@]}"
+/usr/bin/promtail "${promtail_args[@]}"
