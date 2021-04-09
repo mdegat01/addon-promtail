@@ -44,8 +44,9 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
     
-    # Receive signals from S6-Overlay
+    # Receive signals from S6-Overlay & ourselves
     signal receive,
+    signal peer=${profile_name},
 
     # Send & receive tcp traffic
     network tcp,
