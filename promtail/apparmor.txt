@@ -1,49 +1,55 @@
 include <tunables/global>
 
-profile promtail flags=(attach_disconnected,mediate_deleted) {
+profile promtail flags=(complain,attach_disconnected,mediate_deleted) {
   include <abstractions/base>
 
   # Send signals to children
   signal (send) set=(kill,term,int,hup,cont),
 
   # S6-Overlay
-  /init rix,
-  /bin/** rix,
-  /usr/bin/** rix,
-  /etc/s6/** rix,
-  /run/s6/** rwix,
-  /etc/services.d/** rwix,
-  /etc/cont-init.d/** rwix,
-  /etc/cont-finish.d/** rwix,
-  /etc/fix-attrs.d/** rw,
-  /run/** rwk,
-  /dev/tty rw,
-  /etc/** r,
-  /dev/null k,
+  /init                           rix,
+  /bin/**                         rix,
+  /usr/bin/**                     rix,
+  @{etc_ro}/s6/**                 rix,
+  @{etc_rw}/services.d/{,**}      rwix,
+  @{etc_rw}/cont-init.d/{,**}     rwix,
+  @{etc_rw}/cont-finish.d/{,**}   rwix,
+  @{etc_rw}/fix-attrs.d/{,**}     rw,
+  @{run}/s6/**                    rwix,
+  @{run}/**                       rwk,
+  /dev/tty                        rw,
+  @{etc_ro}/group                 r,
+  @{etc_ro}/passwd                r,
+  @{etc_ro}/hosts                 r,
+  @{etc_ro}/ssl/openssl.cnf       r,
+  @{etc_ro}/host.conf             r,
+  @{etc_ro}/nsswitch.conf         r,
+  @{etc_ro}/resolv.conf           r,
+  /dev/null                       k,
 
   # Bashio
-  /usr/lib/bashio/** ix,
-  /tmp/** rw,
+  /usr/lib/bashio/**              ix,
+  /tmp/**                         rw,
 
   # Options.json & addon data
-  /data/** rw,
+  /data/**                        rw,
 
   # Files needed for setup
-  /etc/promtail/** rw,
-  /share/** r,
-  /ssl/** r,
-  /var/log/journal** r,
+  @{etc_rw}/promtail/**           rw,
+  /share/**                       r,
+  /ssl/**                         r,
+  /var/log/journal/{,**}          r,
 
   # Programs
-  /usr/bin/promtail cx,
-  /usr/bin/yq Cx,
+  /usr/bin/promtail               cx,
+  /usr/bin/yq                     Cx,
 
   # Shell access
-  owner @{HOME}/* rw,
+  owner @{HOME}/*                 rw,
 
   profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
-    
+
     # Receive signals from S6-Overlay & ourselves
     signal receive,
     signal peer=@{profile_name},
@@ -52,42 +58,42 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     network tcp,
 
     # Executables
-    /bin/** rix,
-    /usr/bin/** rix,
+    /bin/**                         rix,
+    /usr/bin/**                     rix,
 
     # Addon data
-    /data/** r,
-    /data/promtail/** rw,
+    /data/**                        r,
+    /data/promtail/**               rw,
 
     # Log sources
-    /run/log/journal** r,
-    /var/log/journal** r,
-    /share/** r,
+    @{run}/log/journal/{,**}        r,
+    /var/log/journal/{,**}          r,
+    /share/**                       r,
 
     # Config
-    /etc/promtail/config.yaml r,
-    /ssl/** r,
+    @{etc_ro}/promtail/config.yaml  r,
+    /ssl/**                         r,
 
     # Runtime usage
-    /etc/hosts r,
-    /etc/resolv.conf r,
-    /etc/passwd r,
-    /etc/nsswitch.conf r,
-    /proc/sys/net/core/somaxconn r,
-    /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
-    /dev/null k,
+    @{etc_ro}/hosts                 r,
+    @{etc_ro}/resolv.conf           r,
+    @{etc_ro}/passwd                r,
+    @{etc_ro}/nsswitch.conf         r,
+    @{PROC}/sys/net/core/somaxconn  r,
+    @{sys}/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+    /dev/null                       k,
   }
 
   profile /usr/bin/yq flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
 
     # Config files
-    /etc/promtail/* rw,
-    /share/** r,
+    @{etc_rw}/promtail/*            rw,
+    /share/**                       r,
 
     # Runtime usage
-    /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
-    /usr/bin/yq rm,
-    /dev/null k,
+    @{sys}/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+    /usr/bin/yq                     rm,
+    /dev/null                       k,
   }
 }
