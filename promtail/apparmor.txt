@@ -7,45 +7,47 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   signal (send) set=(kill,term,int,hup,cont),
 
   # S6-Overlay
-  /init                           rix,
-  /bin/**                         rix,
-  /usr/bin/**                     rix,
-  @{etc_ro}/s6/**                 rix,
-  @{etc_rw}/services.d/{,**}      rwix,
-  @{etc_rw}/cont-init.d/{,**}     rwix,
-  @{etc_rw}/cont-finish.d/{,**}   rwix,
-  @{etc_rw}/fix-attrs.d/{,**}     rw,
-  @{run}/s6/**                    rwix,
-  @{run}/**                       rwk,
-  /dev/tty                        rw,
-  @{etc_ro}/group                 r,
-  @{etc_ro}/passwd                r,
-  @{etc_ro}/hosts                 r,
-  @{etc_ro}/ssl/openssl.cnf       r,
-  @{etc_ro}/host.conf             r,
-  @{etc_ro}/nsswitch.conf         r,
-  @{etc_ro}/resolv.conf           r,
-  /dev/null                       k,
+  /init                             rix,
+  /bin/**                           rix,
+  /usr/bin/**                       rix,
+  @{etc_ro}/s6/**                   rix,
+  @{etc_rw}/services.d/{,**}        rwix,
+  @{etc_rw}/cont-init.d/{,**}       rwix,
+  @{etc_rw}/cont-finish.d/{,**}     rwix,
+  @{etc_rw}/fix-attrs.d/{,**}       rw,
+  @{run}/s6/**                      rwix,
+  @{run}/**                         rwk,
+  /dev/tty                          rw,
+  @{etc_ro}/group                   r,
+  @{etc_ro}/passwd                  r,
+  @{etc_ro}/hosts                   r,
+  @{etc_ro}/ssl/openssl.cnf         r,
+  @{etc_ro}/host.conf               r,
+  @{etc_ro}/nsswitch.conf           r,
+  @{etc_ro}/resolv.conf             r,
+  /dev/null                         k,
 
   # Bashio
-  /usr/lib/bashio/**              ix,
-  /tmp/**                         rw,
+  /usr/lib/bashio/**                ix,
+  /tmp/**                           rw,
 
   # Options.json & addon data
-  /data/**                        rw,
+  /data                             r,
+  /data/**                          rw,
 
   # Files needed for setup
-  @{etc_rw}/promtail/**           rw,
-  /share/**                       r,
-  /ssl/**                         r,
-  /var/log/journal/{,**}          r,
+  @{etc_rw}/promtail/{,**}          rw,
+  /share/{,**}                      r,
+  /ssl/{,**}                        r,
+  /var/log/journal/{,**}            r,
 
   # Programs
-  /usr/bin/promtail               cx,
-  /usr/bin/yq                     Cx,
+  /usr/bin/promtail                 cx,
+  /usr/bin/yq                       Cx,
 
   # Shell access
-  owner @{HOME}/*                 rw,
+  owner @{HOME}/.*                  rw,
+  /etc/bash.bashrc                  r,
 
   profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
@@ -63,7 +65,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
 
     # Addon data
     /data/**                        r,
-    /data/promtail/**               rw,
+    /data/promtail/**               rwk,
 
     # Log sources
     @{run}/log/journal/{,**}        r,
