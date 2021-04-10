@@ -62,8 +62,10 @@ provided.
 
 ### Option: `client.cafile`
 
-The absolute path to the CA certificate used to sign Loki's certificate if Loki
-is using a self-signed certificate for SSL.
+The CA certificate used to sign Loki's certificate if Loki is using a self-signed
+certificate for SSL.
+
+**Note**: _The file MUST be stored in `/ssl/`, which is the default_
 
 ### Option: `client.servername`
 
