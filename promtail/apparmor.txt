@@ -65,7 +65,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
 
     # Addon data
     /data/**                        r,
-    /data/promtail/**               rw,
+    /data/promtail/**               rwk,
 
     # Log sources
     @{run}/log/journal/{,**}        r,
