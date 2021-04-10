@@ -39,6 +39,26 @@ If you are more interested in stable releases of these add-ons:
 
 <https://github.com/mdegat01/hassio-addons>
 
+{% elif channel == "beta" %}
+{% set repository.url = repository.url + '-beta' %}
+{% set repository.slug = 'e9a81774' %}
+## WARNING! THIS IS A BETA REPOSITORY
+
+This Add-ons repository contains beta builds of add-ons. Beta
+builds add-ons are based upon the latest release including pre-releases.
+
+- They might stop working at any time.
+- They could have a negative impact on your system.
+
+This repository was created for:
+
+- Anybody willing to test.
+- Anybody interested in trying out upcoming add-ons or add-on features.
+
+If you are more interested in stable releases of these add-ons:
+
+<https://github.com/mdegat01/hassio-addons>
+
 {% endif %}
 ## About
 
@@ -94,6 +114,8 @@ SOFTWARE.
 
 {% if channel == "edge" %}
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
+{% elif channel == "beta" %}
+[project-stage-shield]: https://img.shields.io/badge/project%20stage-beta-orange.svg
 {% else %}
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
 {% endif %}
