@@ -12,7 +12,7 @@ bashio::log.info 'Setting base config for promtail...'
 cp /etc/promtail/base_config.yaml $config_file
 
 # Set up client section
-if bashio::config.exists 'client.username'; then
+if ! bashio::config.is_empty 'client.username'; then
     bashio::log.info 'Adding basic auth to client config...'
     bashio::config.require 'client.password' "'client.username' is specified"
     {
@@ -48,11 +48,11 @@ if ! bashio::config.is_empty 'client.cafile'; then
         echo "      ca_file: ${cafile}"
     } >> "${config_file}"
 
-    if bashio::config.exists 'client.servername'; then
+    if ! bashio::config.is_empty 'client.servername'; then
         echo "      server_name: $(bashio::config 'client.servername')" >> "${config_file}"
     fi
 
-    if bashio::config.exists 'client.certfile'; then
+    if ! bashio::config.is_empty 'client.certfile'; then
         bashio::log.info "Adding mTLS to client config..."
         bashio::config.require 'client.keyfile' "'client.certfile' is specified"
         if ! bashio::fs.file_exists "$(bashio::config 'client.certfile')"; then
@@ -83,7 +83,7 @@ fi
 } >> "${config_file}"
 if bashio::config.true 'skip_default_scrape_config'; then
     bashio::log.info 'Skipping default journald scrape config...'
-    if bashio::config.exists 'additional_pipeline_stages'; then
+    if ! bashio::config.is_empty 'additional_pipeline_stages'; then
         bashio::log.warning
         bashio::log.warning "'additional_pipeline_stages' ignored since 'skip_default_scrape_config' is true!"
         bashio::log.warning 'See documentation for more information.'
@@ -91,7 +91,7 @@ if bashio::config.true 'skip_default_scrape_config'; then
     fi
     bashio::config.require 'additional_scrape_configs' "'skip_default_scrape_config' is true"
 
-elif bashio::config.exists 'additional_pipeline_stages'; then
+elif ! bashio::config.is_empty 'additional_pipeline_stages'; then
     bashio::log.info "Adding additional pipeline stages to default journal scrape config..."
     add_stages="$(bashio::config 'additional_pipeline_stages')"
     scrape_configs=/etc/promtail/journal-scrape-configs.yaml
@@ -111,7 +111,7 @@ elif bashio::config.exists 'additional_pipeline_stages'; then
         - > "${scrape_configs}"
 fi
 
-if bashio::config.exists 'additional_scrape_configs'; then
+if ! bashio::config.is_empty 'additional_scrape_configs'; then
     bashio::log.info "Adding custom scrape configs..."
     add_scrape_configs="$(bashio::config 'additional_scrape_configs')"
     if ! bashio::fs.file_exists "${add_scrape_configs}"; then
