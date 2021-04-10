@@ -46,7 +46,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     
     # Receive signals from S6-Overlay & ourselves
     signal receive,
-    signal peer=${profile_name},
+    signal peer=@{profile_name},
 
     # Send & receive tcp traffic
     network tcp,
