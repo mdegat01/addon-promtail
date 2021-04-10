@@ -24,7 +24,7 @@ fi
 
 if ! bashio::config.is_empty 'client.cafile'; then
     bashio::log.info "Adding TLS to client config..."
-    cafile=$(bashio::config 'cafile')
+    cafile=$(bashio::config 'client.cafile')
 
     # Absolute path support deprecated 4/21 for release 1.4.1.
     # Wait until at least 5/21 to remove
