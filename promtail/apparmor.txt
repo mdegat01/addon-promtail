@@ -1,6 +1,6 @@
 include <tunables/global>
 
-profile promtail flags=(complain,attach_disconnected,mediate_deleted) {
+profile promtail flags=(attach_disconnected,mediate_deleted) {
   include <abstractions/base>
 
   # Send signals to children
