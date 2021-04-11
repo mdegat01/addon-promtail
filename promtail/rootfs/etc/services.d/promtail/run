@@ -4,9 +4,10 @@
 # Home Assistant Add-on: Promtail
 # Runs Promtail
 # ==============================================================================
+readonly PROMTAIL_CONFIG='/etc/promtail/config.yaml'
+declare log_level
 
 bashio::log.info 'Starting Promtail...'
-promtail_config='/etc/promtail/config.yaml'
 
 journal_path='/var/log/journal'
 if ! bashio::fs.directory_exists "${journal_path}" || [ -z "$(ls -A ${journal_path})" ]; then
@@ -29,7 +30,7 @@ export "URL=$(bashio::config 'client.url')"
 export "JOURNAL_PATH=${journal_path}"
 export "LOG_LEVEL=${log_level}"
 
-promtail_args=("-config.expand-env=true" "-config.file=${promtail_config}")
+promtail_args=("-config.expand-env=true" "-config.file=${PROMTAIL_CONFIG}")
 if [ "${log_level}" == "debug" ]; then
     bashio::log.debug "Logging full config on startup for debugging..."
     promtail_args+=("-print-config-stderr=true")
