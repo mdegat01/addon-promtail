@@ -4,12 +4,18 @@
 # Home Assistant Add-on: Promtail
 # This file makes the config file from inputs
 # ==============================================================================
-config_file=/etc/promtail/config.yaml
-def_scrape_configs=/etc/promtail/default-scrape-config.yaml
-scrape_configs="${def_scrape_configs}"
+readonly CONFIG_DIR=/etc/promtail
+readonly CONFIG_FILE="${CONFIG_DIR}/config.yaml"
+readonly BASE_CONFIG="${CONFIG_DIR}/base_config.yaml"
+readonly DEF_SCRAPE_CONFIGS="${CONFIG_DIR}/default-scrape-config.yaml"
+readonly CUSTOM_SCRAPE_CONFIGS="${CONFIG_DIR}/custom-scrape-config.yaml"
+declare cafile
+declare add_stages
+declare add_scrape_configs
+scrape_configs="${DEF_SCRAPE_CONFIGS}"
 
 bashio::log.info 'Setting base config for promtail...'
-cp /etc/promtail/base_config.yaml $config_file
+cp "${BASE_CONFIG}" "${CONFIG_FILE}"
 
 # Set up client section
 if ! bashio::config.is_empty 'client.username'; then
@@ -19,7 +25,7 @@ if ! bashio::config.is_empty 'client.username'; then
         echo "    basic_auth:"
         echo "      username: $(bashio::config 'client.username')"
         echo "      password: $(bashio::config 'client.password')"
-    } >> "${config_file}"
+    } >> "${CONFIG_FILE}"
 fi
 
 if ! bashio::config.is_empty 'client.cafile'; then
@@ -46,10 +52,10 @@ if ! bashio::config.is_empty 'client.cafile'; then
     {
         echo "    tls_config:"
         echo "      ca_file: ${cafile}"
-    } >> "${config_file}"
+    } >> "${CONFIG_FILE}"
 
     if ! bashio::config.is_empty 'client.servername'; then
-        echo "      server_name: $(bashio::config 'client.servername')" >> "${config_file}"
+        echo "      server_name: $(bashio::config 'client.servername')" >> "${CONFIG_FILE}"
     fi
 
     if ! bashio::config.is_empty 'client.certfile'; then
@@ -72,7 +78,7 @@ if ! bashio::config.is_empty 'client.cafile'; then
         {
             echo "      cert_file: $(bashio::config 'client.certfile')"
             echo "      key_file: $(bashio::config 'client.keyfile')"
-        } >> "${config_file}"
+        } >> "${CONFIG_FILE}"
     fi
 fi
 
@@ -80,7 +86,7 @@ fi
 {
     echo
     echo "scrape_configs:"
-} >> "${config_file}"
+} >> "${CONFIG_FILE}"
 if bashio::config.true 'skip_default_scrape_config'; then
     bashio::log.info 'Skipping default journald scrape config...'
     if ! bashio::config.is_empty 'additional_pipeline_stages'; then
@@ -94,7 +100,7 @@ if bashio::config.true 'skip_default_scrape_config'; then
 elif ! bashio::config.is_empty 'additional_pipeline_stages'; then
     bashio::log.info "Adding additional pipeline stages to default journal scrape config..."
     add_stages="$(bashio::config 'additional_pipeline_stages')"
-    scrape_configs=/etc/promtail/journal-scrape-configs.yaml
+    scrape_configs="${CUSTOM_SCRAPE_CONFIGS}"
     if ! bashio::fs.file_exists "${add_stages}"; then
         bashio::log.fatal
         bashio::log.fatal "The file specified for 'additional_pipeline_stages' does not exist!"
@@ -105,7 +111,7 @@ elif ! bashio::config.is_empty 'additional_pipeline_stages'; then
 
     yq -NP eval-all \
         'select(fi == 0) + [{"add_pipeline_stages": select(fi == 1)}]' \
-        $def_scrape_configs "${add_stages}" \
+        "${DEF_SCRAPE_CONFIGS}" "${add_stages}" \
     | yq -NP e \
         '[(.[0] * .[1]) | {"job_name": .job_name, "journal": .journal, "relabel_configs": .relabel_configs, "pipeline_stages": .pipeline_stages + .add_pipeline_stages}]' \
         - > "${scrape_configs}"
@@ -123,11 +129,11 @@ if ! bashio::config.is_empty 'additional_scrape_configs'; then
     fi
 
     if bashio::config.true 'skip_default_scrape_config'; then
-        yq -NP e '[] + .' "${add_scrape_configs}" >> "${config_file}"
+        yq -NP e '[] + .' "${add_scrape_configs}" >> "${CONFIG_FILE}"
     else
         yq -NP eval-all 'select(fi == 0) + select(fi == 1)' \
-            "${scrape_configs}" "${add_scrape_configs}" >> "${config_file}"
+            "${scrape_configs}" "${add_scrape_configs}" >> "${CONFIG_FILE}"
     fi
 else
-    yq -NP e '[] + .' "${scrape_configs}" >> "${config_file}"
+    yq -NP e '[] + .' "${scrape_configs}" >> "${CONFIG_FILE}"
 fi
