@@ -1,5 +1,8 @@
 include <tunables/global>
 
+# Systemd Journal location
+@{journald}=/var/log/journal/{,**} @{run}/log/journal/{,**}
+
 profile promtail flags=(attach_disconnected,mediate_deleted) {
   include <abstractions/base>
 
@@ -39,7 +42,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   @{etc_rw}/promtail/{,**}          rw,
   /share/{,**}                      r,
   /ssl/{,**}                        r,
-  /var/log/journal/{,**}            r,
+  @{journald}                       r,
 
   # Programs
   /usr/bin/promtail                 cx,
@@ -47,7 +50,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
 
   # Shell access
   owner @{HOME}/.*                  rw,
-  /etc/bash.bashrc                  r,
+  @{etc_ro}/bash.bashrc             r,
 
   profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
@@ -68,8 +71,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     /data/promtail/**               rwk,
 
     # Log sources
-    @{run}/log/journal/{,**}        r,
-    /var/log/journal/{,**}          r,
+    @{journald}                     r,
     /share/**                       r,
 
     # Config
