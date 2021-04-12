@@ -62,10 +62,6 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     # Send & receive tcp traffic
     network tcp,
 
-    # Executables
-    /bin/**                         rix,
-    /usr/bin/**                     rix,
-
     # Addon data
     /data/**                        r,
     /data/promtail/**               rwk,
@@ -79,6 +75,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     /ssl/**                         r,
 
     # Runtime usage
+    /usr/bin/promtail               rm,
     @{etc_ro}/hosts                 r,
     @{etc_ro}/resolv.conf           r,
     @{etc_ro}/passwd                r,
@@ -96,8 +93,8 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     /share/**                       r,
 
     # Runtime usage
-    @{sys}/kernel/mm/transparent_hugepage/hpage_pmd_size r,
     /usr/bin/yq                     rm,
+    @{sys}/kernel/mm/transparent_hugepage/hpage_pmd_size r,
     /dev/null                       k,
   }
 }
