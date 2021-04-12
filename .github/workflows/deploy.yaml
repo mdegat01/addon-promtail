@@ -152,7 +152,9 @@ jobs:
             }
   publish-beta:
     name: 📢 Publish to beta repository
-    if: needs.information.outputs.environment == 'beta'
+    if: |
+      needs.information.outputs.environment == 'beta' ||
+      needs.information.outputs.environment == 'stable'
     needs:
       - information
       - deploy
