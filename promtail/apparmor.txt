@@ -1,0 +1,109 @@
+include <tunables/global>
+
+# Docker overlay
+@{fs_root}=/ /docker/overlay2/*/diff/
+@{do_etc_rw}=@{fs_root}/@{etc_rw}/
+@{do_etc_ro}=@{fs_root}/@{etc_ro}/
+@{do_run}=@{fs_root}/@{run}/
+@{do_usr}=@{fs_root}/usr/
+@{do_var}=@{fs_root}/var/
+
+# Systemd Journal location
+@{journald}=/var/log/journal/{,**} @{run}/log/journal/{,**}
+
+profile promtail flags=(attach_disconnected,mediate_deleted) {
+  include <abstractions/base>
+
+  # Send signals to children
+  signal (send) set=(kill,term,int,hup,cont),
+
+  # S6-Overlay
+  /init                               rix,
+  /bin/**                             rix,
+  /usr/bin/**                         rix,
+  @{do_etc_ro}/s6/**                  rix,
+  @{do_etc_rw}/services.d/{,**}       rwix,
+  @{do_etc_rw}/cont-init.d/{,**}      rwix,
+  @{do_etc_rw}/cont-finish.d/{,**}    rwix,
+  @{do_etc_rw}/fix-attrs.d/{,**}      rw,
+  @{do_run}/s6/**                     rwix,
+  @{do_run}/**                        rwk,
+  /dev/tty                            rw,
+  @{fs_root}/usr/lib/locale/{,**}     r,
+  @{do_etc_ro}/group                  r,
+  @{do_etc_ro}/passwd                 r,
+  @{do_etc_ro}/hosts                  r,
+  @{do_etc_ro}/ssl/openssl.cnf        r,
+  @{do_etc_ro}/host.conf              r,
+  @{do_etc_ro}/nsswitch.conf          r,
+  @{do_etc_ro}/resolv.conf            r,
+  /dev/null                           k,
+
+  # Bashio
+  /usr/lib/bashio/**                  ix,
+  /tmp/**                             rw,
+
+  # Options.json & addon data
+  /data                               r,
+  /data/**                            rw,
+
+  # Files needed for setup
+  @{do_etc_rw}/promtail/{,**}         rw,
+  /share/{,**}                        r,
+  /ssl/{,**}                          r,
+  @{journald}                         r,
+
+  # Programs
+  /usr/bin/promtail                   cx,
+  /usr/bin/yq                         Cx,
+
+  # Shell access
+  owner @{HOME}/.*                    rw,
+  @{do_etc_ro}/bash.bashrc            r,
+
+  profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+
+    # Receive signals from S6-Overlay & ourselves
+    signal receive,
+    signal peer=@{profile_name},
+
+    # Send & receive tcp traffic
+    network tcp,
+
+    # Addon data
+    /data/**                          r,
+    /data/promtail/**                 rwk,
+
+    # Log sources
+    @{journald}                       r,
+    /share/**                         r,
+
+    # Config
+    @{do_etc_ro}/promtail/config.yaml r,
+    /ssl/**                           r,
+
+    # Runtime usage
+    /usr/bin/promtail                 rm,
+    @{do_etc_ro}/hosts                r,
+    @{do_etc_ro}/resolv.conf          r,
+    @{do_etc_ro}/passwd               r,
+    @{do_etc_ro}/nsswitch.conf        r,
+    @{PROC}/sys/net/core/somaxconn    r,
+    @{sys}/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+    /dev/null                         k,
+  }
+
+  profile /usr/bin/yq flags=(attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+
+    # Config files
+    @{do_etc_rw}/promtail/*           rw,
+    /share/**                         r,
+
+    # Runtime usage
+    /usr/bin/yq                       rm,
+    @{sys}/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+    /dev/null                         k,
+  }
+}
