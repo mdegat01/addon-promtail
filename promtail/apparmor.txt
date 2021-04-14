@@ -29,7 +29,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   @{do_run}/s6/**                     rwix,
   @{do_run}/**                        rwk,
   /dev/tty                            rw,
-  @{fs_root}/usr/lib/locale/{,**}     r,
+  @{do_usr}/lib/locale/{,**}          r,
   @{do_etc_ro}/group                  r,
   @{do_etc_ro}/passwd                 r,
   @{do_etc_ro}/hosts                  r,
