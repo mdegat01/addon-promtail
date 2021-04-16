@@ -1,12 +1,12 @@
 # https://github.com/hassio-addons/addon-debian-base/releases
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.3
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.4
 ARG BUILD_ARCH=amd64
 
 # https://github.com/mdegat01/promtail-journal/releases
 FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.0.0 as build_promtail
 
 # https://hub.docker.com/_/alpine
-FROM alpine:3.13.4 as build_yq
+FROM alpine:3.13.5 as build_yq
 # https://github.com/mikefarah/yq/releases
 ENV YQ_VERSION 4.7.0
 
@@ -24,10 +24,12 @@ RUN set -eux; \
         aarch64) BINARCH='arm64' ;; \
         *) echo >&2 "error: unsupported architecture (${APKARCH})"; exit 1 ;; \
     esac; \
-    curl -J -L -o /tmp/yq.tar.gz "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${BINARCH}.tar.gz"; \
+    curl -J -L -o /tmp/yq.tar.gz \
+        "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${BINARCH}.tar.gz"; \
     tar -xf /tmp/yq.tar.gz -C /usr/bin; \
     mv /usr/bin/yq_linux_${BINARCH} /usr/bin/yq; \
-    chmod a+x /usr/bin/yq;
+    chmod a+x /usr/bin/yq; \
+    rm /tmp/yq.tar.gz;
 
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
