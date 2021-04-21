@@ -18,6 +18,10 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   # Send signals to children
   signal (send) set=(kill,term,int,hup,cont),
 
+  # Network access
+  network tcp,
+  network udp,
+
   # S6-Overlay
   /init                            rix,
   /bin/**                          rix,
@@ -65,8 +69,11 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     signal receive,
     signal peer=@{profile_name},
 
-    # Send & receive tcp traffic
+    # Network access
     network tcp,
+    network udp,
+    network netlink raw,
+    network unix dgram,
 
     # Addon data
     /data/**                       r,
