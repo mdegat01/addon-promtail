@@ -15,10 +15,8 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   include <abstractions/base>
   include <abstractions/bash>
 
-  # Signalling - Receive from above, signal children and ourselves
-  signal (receive) peer=unconfined,
-  signal (send) peer=@{profile_name}//**,
-  signal peer=@{profile_name},
+  # Send signals to child services
+  signal (send) peer=@{profile_name}//*,
 
   # Network access
   network tcp,
@@ -55,16 +53,14 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   @{journald}                             r,
 
   # Programs
-  /usr/bin/promtail                       cx,
+  /usr/bin/promtail                       cx -> promtail,
   /usr/bin/yq                             Cx,
 
-  profile /usr/bin/promtail flags=(attach_disconnected,mediate_deleted) {
+  profile promtail flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
 
-    # Signalling - receive from above, signal ourselves
-    signal (receive) peer=unconfined,
+    # Receive signals from s6
     signal (receive) peer=*_promtail,
-    signal peer=@{profile_name},
 
     # Network access
     network tcp,
