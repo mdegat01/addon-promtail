@@ -1,5 +1,4 @@
-# https://github.com/hassio-addons/addon-debian-base/releases
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:4.1.4
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64
 ARG BUILD_ARCH=amd64
 
 # https://github.com/mdegat01/promtail-journal/releases
@@ -31,8 +30,8 @@ RUN set -eux; \
     chmod a+x /usr/bin/yq; \
     rm /tmp/yq.tar.gz;
 
-# hadolint ignore=DL3006
-FROM ${BUILD_FROM}
+# https://github.com/hassio-addons/addon-debian-base/releases
+FROM ${BUILD_FROM}:4.2.0
 
 # tzdata required for the timestamp stage to work
 # Backports repo required to get a libsystemd version 246 or newer which is required to handle journal +ZSTD compression
