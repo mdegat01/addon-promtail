@@ -44,7 +44,7 @@ RUN set -eux; \
         ; \
     apt-get install -qy --no-install-recommends \
         -t buster-backports \ 
-        libsystemd-dev=247.3-3~bpo10+1 \
+        libsystemd-dev=247.3-5~bpo10+1 \
         ; \
     update-ca-certificates; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
