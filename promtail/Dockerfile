@@ -7,7 +7,7 @@ FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.0.0 as build_promtail
 # https://hub.docker.com/_/alpine
 FROM alpine:3.13.5 as build_yq
 # https://github.com/mikefarah/yq/releases
-ENV YQ_VERSION 4.9.0
+ENV YQ_VERSION 4.9.1
 
 RUN set -eux; \
     apk update; \
