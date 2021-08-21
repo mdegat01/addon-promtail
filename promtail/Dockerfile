@@ -39,7 +39,7 @@ RUN set -eux; \
     echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
-        tzdata=2021a-0+deb10u1 \
+        tzdata=2021a-1 \
         ca-certificates=20200601~deb10u2 \
         ; \
     apt-get install -qy --no-install-recommends \
