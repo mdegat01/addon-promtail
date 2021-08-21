@@ -40,7 +40,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
         tzdata=2021a-1 \
-        ca-certificates=20200601~deb10u2 \
+        ca-certificates=20210119 \
         ; \
     apt-get install -qy --no-install-recommends \
         -t buster-backports \ 
