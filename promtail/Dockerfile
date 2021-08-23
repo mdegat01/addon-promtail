@@ -2,7 +2,7 @@ ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64
 ARG BUILD_ARCH=amd64
 
 # https://github.com/mdegat01/promtail-journal/releases
-FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.1.0 as build_promtail
+FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.2.0 as build_promtail
 
 # https://hub.docker.com/_/alpine
 FROM alpine:3.14.1 as build_yq
