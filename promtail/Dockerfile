@@ -31,20 +31,15 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz;
 
 # https://github.com/hassio-addons/addon-debian-base/releases
-FROM ${BUILD_FROM}:4.2.3
+FROM ${BUILD_FROM}:5.0.0
 
 # tzdata required for the timestamp stage to work
-# Backports repo required to get a libsystemd version 246 or newer which is required to handle journal +ZSTD compression
 RUN set -eux; \
-    echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
-        tzdata=2021a-0+deb10u1 \
-        ca-certificates=20200601~deb10u2 \
-        ; \
-    apt-get install -qy --no-install-recommends \
-        -t buster-backports \ 
-        libsystemd-dev=247.3-6~bpo10+1 \
+        tzdata=2021a-1 \
+        ca-certificates=20210119 \
+        libsystemd-dev=247.3-6 \
         ; \
     update-ca-certificates; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
