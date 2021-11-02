@@ -31,13 +31,13 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz;
 
 # https://github.com/hassio-addons/addon-debian-base/releases
-FROM ${BUILD_FROM}:5.1.1
+FROM ${BUILD_FROM}:5.2.0
 
 # tzdata required for the timestamp stage to work
 RUN set -eux; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
-        tzdata=2021a-1 \
+        tzdata=2021a-1+deb11u1 \
         ca-certificates=20210119 \
         libsystemd-dev=247.3-6 \
         ; \
