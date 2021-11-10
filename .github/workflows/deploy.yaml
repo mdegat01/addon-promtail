@@ -62,6 +62,10 @@ jobs:
       matrix:
         architecture: ${{ fromJson(needs.information.outputs.architectures) }}
     steps:
+      - name: 🔂 Wait for other runs to complete
+        uses: softprops/turnstyle@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v2.4.0
       - name: 🏗 Set up build cache
@@ -116,7 +120,7 @@ jobs:
           cache-from: |
             type=local,src=/tmp/.docker-cache
             ghcr.io/mdegat01/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:edge
-          cache-to: type=local,mode=max,dest=/tmp/.docker-cache
+          cache-to: type=local,mode=max,dest=/tmp/.docker-cache-new
           platforms: ${{ steps.flags.outputs.platform }}
           build-args: |
             BUILD_ARCH=${{ matrix.architecture }}
@@ -127,6 +131,14 @@ jobs:
             BUILD_REF=${{ github.sha }}
             BUILD_REPOSITORY=${{ github.repository }}
             BUILD_VERSION=${{ needs.information.outputs.version }}
+      # This ugly bit is necessary, or our cache will grow forever...
+      # Well until we hit GitHub's limit of 5GB :)
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: 🚚 Swap build cache
+        run: |
+          rm -rf /tmp/.docker-cache
+          mv /tmp/.docker-cache-new /tmp/.docker-cache
   publish-edge:
     name: 📢 Publish to edge repository
     if: needs.information.outputs.environment == 'edge'
