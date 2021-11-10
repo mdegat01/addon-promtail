@@ -31,7 +31,7 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz;
 
 # https://github.com/hassio-addons/addon-debian-base/releases
-FROM ${BUILD_FROM}:5.2.1
+FROM ${BUILD_FROM}:5.2.2
 
 # tzdata required for the timestamp stage to work
 RUN set -eux; \
