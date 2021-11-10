@@ -62,6 +62,10 @@ jobs:
       matrix:
         architecture: ${{ fromJson(needs.information.outputs.architectures) }}
     steps:
+      - name: 🔂 Wait for other runs to complete
+        uses: softprops/turnstyle@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v2.4.0
       - name: 🏗 Set up build cache
@@ -116,7 +120,7 @@ jobs:
           cache-from: |
             type=local,src=/tmp/.docker-cache
             ghcr.io/mdegat01/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:edge
-          cache-to: type=local,mode=max,dest=/tmp/.docker-cache
+          cache-to: type=local,mode=max,dest=/tmp/.docker-cache-new
           platforms: ${{ steps.flags.outputs.platform }}
           build-args: |
             BUILD_ARCH=${{ matrix.architecture }}
