@@ -5,7 +5,7 @@ ARG BUILD_ARCH=amd64
 FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.3.0 as build_promtail
 
 # https://hub.docker.com/_/alpine
-FROM alpine:3.14.3 as build_yq
+FROM alpine:3.15.0 as build_yq
 # https://github.com/mikefarah/yq/releases
 ENV YQ_VERSION 4.15.1
 
@@ -13,7 +13,7 @@ RUN set -eux; \
     apk update; \
     apk add --no-cache --virtual .build-deps \
         tar=1.34-r0 \
-        curl=7.79.1-r0 \
+        curl=7.80.0-r0 \
     ; \
     APKARCH="$(apk --print-arch)"; \
     case "${APKARCH}" in \
