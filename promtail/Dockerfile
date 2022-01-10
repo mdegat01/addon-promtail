@@ -37,7 +37,7 @@ FROM ${BUILD_FROM}:5.2.2
 RUN set -eux; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
-        tzdata=2021a-1+deb11u1 \
+        tzdata=2021a-1+deb11u2 \
         ca-certificates=20210119 \
         libsystemd-dev=247.3-6 \
         ; \
