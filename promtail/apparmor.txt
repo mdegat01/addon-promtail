@@ -1,7 +1,8 @@
 include <tunables/global>
 
 # Docker overlay
-@{fs_root}=/ /docker/overlay2/*/diff/
+@{docker_root}=/docker/ /var/lib/docker/
+@{fs_root}=/ @{docker_root}/overlay2/*/diff/
 @{do_etc}=@{fs_root}/etc/
 @{do_opt}=@{fs_root}/opt/
 @{do_run}=@{fs_root}/{run,var/run}/
