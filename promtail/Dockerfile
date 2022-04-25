@@ -39,7 +39,7 @@ RUN set -eux; \
     apt-get install -qy --no-install-recommends \ 
         tzdata=2021a-1+deb11u2 \
         ca-certificates=20210119 \
-        libsystemd-dev=247.3-6 \
+        libsystemd-dev=247.3-7 \
         ; \
     update-ca-certificates; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
