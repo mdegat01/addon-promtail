@@ -31,7 +31,8 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz;
 
 # https://github.com/hassio-addons/addon-debian-base/releases
-FROM ${BUILD_FROM}:5.3.1
+# hadolint ignore=DL3006
+FROM ${BUILD_FROM}
 
 # tzdata required for the timestamp stage to work
 RUN set -eux; \
