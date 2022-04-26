@@ -9,6 +9,7 @@ arch:
   - armv7
   - armhf
 description: Promtail for Home Assistant
+codenotary: codenotary@degatano.com
 journald: true
 map:
   - config
