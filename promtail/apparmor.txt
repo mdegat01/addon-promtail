@@ -50,6 +50,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
 
   # Files needed for setup
   @{do_etc}/promtail/{,**}                rw,
+  /config/promtail/{,**}                  r,
   /{share,ssl}/{,**}                      r,
   @{journald}                             r,
 
@@ -75,6 +76,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
 
     # Config & log data
     @{do_etc}/promtail/config.yaml        r,
+    /config/promtail/{,**}                r,
     /{share,ssl}/**                       r,
     @{journald}                           r,
 
@@ -93,6 +95,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
 
     # Config files
     @{do_etc}/promtail/*                  rw,
+    /config/promtail/{,**}                r,
     /share/**                             r,
 
     # Runtime usage
