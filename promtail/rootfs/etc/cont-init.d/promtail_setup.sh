@@ -30,17 +30,7 @@ fi
 
 if ! bashio::config.is_empty 'client.cafile'; then
     bashio::log.info "Adding TLS to client config..."
-    cafile=$(bashio::config 'client.cafile')
-
-    # Absolute path support deprecated 4/21 for release 1.4.1.
-    # Wait until at least 5/21 to remove
-    if [[ $cafile =~ ^\/ ]]; then
-        bashio::log.warning "Providing an absolute path for 'client.cafile' is deprecated."
-        bashio::log.warning "Support for absolute paths will be removed in a future release."
-        bashio::log.warning "Please put your CA file in /ssl and provide a relative path."
-    else
-        cafile="/ssl/${cafile}"
-    fi
+    cafile="/ssl/$(bashio::config 'client.cafile')"
 
     if ! bashio::fs.file_exists "${cafile}"; then
         bashio::log.fatal
