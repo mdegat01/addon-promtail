@@ -110,8 +110,11 @@ at the start of each log line for color-coding in terminals. Looking for that
 in a multiline stage makes it so tracebacks are included in the same log entry
 as the error that caused them for easier readability.
 
-See the [promtail documenation][promtail-doc-stages] for more information on how
+See the [promtail documentation][promtail-doc-stages] for more information on how
 to configure pipeline stages.
+
+**Note**: This addon has access to `/ssl`, `/share` and `/config/promtail`. Place
+the file in one of these locations, others will not work.
 
 ### Option: `skip_default_scrape_config`
 
@@ -120,6 +123,9 @@ find [here][addon-default-config]. If you only want it to look at specific log
 files you specify or you don't like the default config and want to adjust it, set
 this to `true`. Then the only scrape configs used will be the ones you specify
 in the `additional_scrape_configs` file.
+
+**Note**: This addon has access to `/ssl`, `/share` and `/config/promtail`. Place
+the file in one of these locations, others will not work.
 
 ### Option: `additional_scrape_configs`
 
@@ -156,6 +162,9 @@ I would also recommend reading the [Loki best practices][loki-doc-best-practices
 guide before making custom scrape configs. Pipelines are pretty powerful but
 avoid making too many labels, it does more harm then good. Instead look into
 what you can do with [LogQL][logql] can do at the other end.
+
+**Note**: This addon has access to `/ssl`, `/share` and `/config/promtail`. Place
+the file in one of these locations, others will not work.
 
 ### Port: `9080/tcp`
 
