@@ -5,7 +5,7 @@ ARG BUILD_ARCH=amd64
 FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.5.0 as build_promtail
 
 # https://hub.docker.com/_/alpine
-FROM alpine:3.15.4 as build_yq
+FROM alpine:3.16.0 as build_yq
 # https://github.com/mikefarah/yq/releases
 ENV YQ_VERSION 4.24.5
 
