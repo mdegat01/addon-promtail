@@ -10,6 +10,7 @@ arch:
   - armhf
 description: Promtail for Home Assistant
 codenotary: codenotary@degatano.com
+init: false
 journald: true
 map:
   - config
