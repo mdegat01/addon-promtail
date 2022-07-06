@@ -71,6 +71,9 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
     network netlink raw,
     network unix dgram,
 
+    # Temp files
+    /tmp/.positions.yaml*                 rw,
+
     # Addon data
     /data/**                              r,
     /data/promtail/**                     rwk,
