@@ -7,3 +7,6 @@ build_from:
 codenotary:
   base_image: codenotary@frenck.dev
   signer: codenotary@degatano.com
+args:
+  PROMTAIL_JOURNAL_VERSION: 1.5.0
+  YQ_VERSION: 4.24.5
