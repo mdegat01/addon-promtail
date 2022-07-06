@@ -40,7 +40,6 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz; \
     yq --version; \
     \
-    apt-get purge -y --auto-remove tar; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
