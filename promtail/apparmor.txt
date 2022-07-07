@@ -43,7 +43,7 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   /dev/null                               k,
 
   # Debian addon base setup
-  @{do_etc}/localtime                     rw,
+  @{do_etc}/{localtime,timezone}          rw,
   @{do_usr}/share/zoneinfo/{,**}          r,
 
   # Bashio
