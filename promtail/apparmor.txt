@@ -42,6 +42,10 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   @{do_etc}/{host,nsswitch,resolv}.conf   r,
   /dev/null                               k,
 
+  # Debian addon base setup
+  @{do_etc}/localtime                     rw,
+  @{do_usr}/share/zoneinfo/{,**}          r,
+
   # Bashio
   /usr/lib/bashio/**                      ix,
   /tmp/**                                 rw,
