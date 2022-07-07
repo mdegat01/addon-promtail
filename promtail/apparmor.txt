@@ -42,8 +42,9 @@ profile promtail flags=(attach_disconnected,mediate_deleted) {
   @{do_etc}/{host,nsswitch,resolv}.conf   r,
   /dev/null                               k,
 
-  # Debian addon base setup
-  @{do_etc}/{localtime,timezone}          rw,
+  # https://github.com/hassio-addons/addon-debian-base/blob/main/base/rootfs/etc/cont-init.d/02-set-timezone.sh
+  # Wants to link /etc/localtime but apparmor sees a random hash so * it is.
+  @{do_etc}/*                             rw,
   @{do_usr}/share/zoneinfo/{,**}          r,
 
   # Bashio
