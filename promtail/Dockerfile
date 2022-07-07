@@ -1,9 +1,8 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64
 ARG BUILD_ARCH=amd64
-ARG PROMTAIL_JOURNAL_VERSION=1.5.0
 
 # https://github.com/mdegat01/promtail-journal/releases
-FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:${PROMTAIL_JOURNAL_VERSION} as build_promtail
+FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.5.0 as build_promtail
 
 # https://github.com/hassio-addons/addon-debian-base/releases
 # hadolint ignore=DL3006
@@ -11,7 +10,7 @@ FROM ${BUILD_FROM}
 
 ARG BUILD_ARCH=amd64
 # https://github.com/mikefarah/yq/releases
-ARG YQ_VERSION=4.24.5
+ENV YQ_VERSION=4.25.3
 
 # Add yq and tzdata (required for the timestamp stage)
 RUN set -eux; \
