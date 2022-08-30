@@ -17,9 +17,6 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
         tar=1.34+dfsg-1 \
-        curl=7.74.0-1.3+deb11u1 \
-        tzdata=2021a-1+deb11u3 \
-        ca-certificates=20210119 \
         libsystemd-dev=247.3-7 \
         ; \
     update-ca-certificates; \
