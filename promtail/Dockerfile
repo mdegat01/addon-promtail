@@ -1,6 +1,9 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64
 ARG BUILD_ARCH=amd64
 
+# https://github.com/grafana/loki/releases
+FROM grafana/promtail:2.6.1 as build_promtail
+
 # https://github.com/hassio-addons/addon-debian-base/releases
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
@@ -17,7 +20,6 @@ RUN set -eux; \
     apt-get install -qy --no-install-recommends \ 
         tar=1.34+dfsg-1 \
         libsystemd-dev=247.3-7 \
-        unzip=6.0-26 \
         ; \
     update-ca-certificates; \
     \
@@ -36,16 +38,11 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz; \
     yq --version; \
     \
-    curl -s -J -L -o /tmp/promtail.zip \
-        "https://github.com/grafana/loki/releases/download/v${PROMTAIL_VERSION}/promtail-linux-${BINARCH}.zip"; \
-    unzip /tmp/promtail.zip -d /usr/bin; \
-    mv /usr/bin/promtail-linux-${BINARCH} /usr/bin/promtail; \
-    chmod a+x /usr/bin/promtail; \
-    rm /tmp/promtail.zip; \
-    promtail --version; \
-    \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
+
+COPY --from=build_promtail /usr/bin/promtail /usr/bin/promtail
+RUN promtail --version
 
 COPY rootfs /
 WORKDIR /data/promtail
