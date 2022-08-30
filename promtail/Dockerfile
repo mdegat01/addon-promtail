@@ -17,6 +17,7 @@ RUN set -eux; \
     apt-get install -qy --no-install-recommends \ 
         tar=1.34+dfsg-1 \
         libsystemd-dev=247.3-7 \
+        unzip=6.0-26 \
         ; \
     update-ca-certificates; \
     \
