@@ -1,9 +1,6 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64
 ARG BUILD_ARCH=amd64
 
-# https://github.com/mdegat01/promtail-journal/releases
-FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.5.0 as build_promtail
-
 # https://github.com/hassio-addons/addon-debian-base/releases
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
@@ -11,6 +8,8 @@ FROM ${BUILD_FROM}
 ARG BUILD_ARCH=amd64
 # https://github.com/mikefarah/yq/releases
 ARG YQ_VERSION=4.27.3
+# https://github.com/grafana/loki/releases
+ARG PROMTAIL_VERSION=2.6.1
 
 # Add yq and tzdata (required for the timestamp stage)
 RUN set -eux; \
@@ -36,12 +35,16 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz; \
     yq --version; \
     \
+    curl -s -J -L -o /tmp/promtail.tar.gz \
+        "https://github.com/grafana/loki/releases/download/v${PROMTAIL_VERSION}/promtail-linux-${BINARCH}.zip"; \
+    tar -xf /tmp/promtail.tar.gz -C /usr/bin; \
+    mv /usr/bin/promtail-linux-${BINARCH} /usr/bin/promtail; \
+    chmod a+x /usr/bin/promtail; \
+    rm /tmp/promtail.tar.gz; \
+    promtail --version; \
+    \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
-
-# Add promtail
-COPY --from=build_promtail /usr/bin/promtail /usr/bin/promtail
-RUN promtail --version
 
 COPY rootfs /
 WORKDIR /data/promtail
