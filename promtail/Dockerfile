@@ -35,12 +35,12 @@ RUN set -eux; \
     rm /tmp/yq.tar.gz; \
     yq --version; \
     \
-    curl -s -J -L -o /tmp/promtail.tar.gz \
+    curl -s -J -L -o /tmp/promtail.zip \
         "https://github.com/grafana/loki/releases/download/v${PROMTAIL_VERSION}/promtail-linux-${BINARCH}.zip"; \
-    tar -xf /tmp/promtail.tar.gz -C /usr/bin; \
+    unzip /tmp/promtail.zip -d /usr/bin; \
     mv /usr/bin/promtail-linux-${BINARCH} /usr/bin/promtail; \
     chmod a+x /usr/bin/promtail; \
-    rm /tmp/promtail.tar.gz; \
+    rm /tmp/promtail.zip; \
     promtail --version; \
     \
     apt-get clean; \
