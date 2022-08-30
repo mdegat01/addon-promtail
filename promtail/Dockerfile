@@ -10,7 +10,7 @@ FROM ${BUILD_FROM}
 
 ARG BUILD_ARCH=amd64
 # https://github.com/mikefarah/yq/releases
-ARG YQ_VERSION=4.25.3
+ARG YQ_VERSION=4.27.3
 
 # Add yq and tzdata (required for the timestamp stage)
 RUN set -eux; \
