@@ -1,8 +1,8 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base/amd64:6.2.7
 ARG BUILD_ARCH=amd64
 
 # https://github.com/mdegat01/promtail-journal/releases
-FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.6.0 as build_promtail
+#FROM ghcr.io/mdegat01/promtail-journal/${BUILD_ARCH}:1.6.0 as build_promtail
 
 # https://github.com/hassio-addons/addon-debian-base/releases
 # hadolint ignore=DL3006
@@ -17,7 +17,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -qy --no-install-recommends \ 
         tar=1.34+dfsg-1 \
-        libsystemd-dev=247.3-7+deb11u1 \
+        libsystemd-dev \
         ; \
     update-ca-certificates; \
     \
@@ -40,7 +40,7 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
 
 # Add promtail
-COPY --from=build_promtail /usr/bin/promtail /usr/bin/promtail
+COPY --from=grafana/promtail:latest /usr/bin/promtail /usr/bin/promtail
 RUN promtail --version
 
 COPY rootfs /
